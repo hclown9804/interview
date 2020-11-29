@@ -1,0 +1,23 @@
+/*
+ * @lc app=leetcode.cn id=119 lang=cpp
+ * 第0行存储偶数行数据，第1行存储奇数行数据
+ * 使用行数&1进行计算
+ * [119] 杨辉三角 II
+ */
+
+// @lc code=start
+class Solution {
+public:
+    vector<int> getRow(int n) {
+        vector<vector<int>> f(2, vector<int>(n + 1));
+        for (int i = 0; i <= n; ++i) {
+            f[i & 1][0] = f[i & 1][i] = 1;
+            for (int j = 1; j < i; ++j) {
+                f[i & 1][j] = f[i - 1 & 1][j - 1] + f[i - 1 & 1][j];
+            }
+        }
+        return f[n & 1];
+    }
+};
+// @lc code=end
+
