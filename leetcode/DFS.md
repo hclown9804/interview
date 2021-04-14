@@ -373,3 +373,35 @@ class Solution {
 }
 ```
 
+## [784. 字母大小写全排列](https://leetcode-cn.com/problems/letter-case-permutation/)
+
+* 大小写转换
+
+> ```
+> 输入：S = "a1b2"
+> 输出：["a1b2", "a1B2", "A1b2", "A1B2"]
+> ```
+
+```java
+class Solution {
+    List<String> ans = new ArrayList<>();
+    public List<String> letterCasePermutation(String S) {
+        dfs(S.toCharArray(), 0);
+        return ans;
+    }
+
+    public void dfs(char s[], int u) {
+        if (u == s.length) {
+            ans.add(new String(s));
+            return;
+        }
+        dfs(s, u + 1);
+        if (Character.isLetter(s[u])) {
+            s[u] ^= 32;
+            dfs(s, u + 1);
+            s[u] ^= 32;
+        }
+    }
+}
+```
+
