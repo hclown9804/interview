@@ -1,5 +1,7 @@
 # DFS
 
+* 有重复必须先排序，并且在循环中判断是否为第一次出现的数
+
 ## [46. 全排列](https://leetcode-cn.com/problems/permutations/)
 
 * **没有重复**的数字序列
@@ -402,6 +404,45 @@ class Solution {
             s[u] ^= 32;
         }
     }
+}
+```
+
+## [17. 电话号码的字母组合](https://leetcode-cn.com/problems/letter-combinations-of-a-phone-number/)
+
+```java
+class Solution {
+    Map<Character, String> map = new HashMap<Character, String>() {{
+        put('2', "abc");
+        put('3', "def");
+        put('4', "ghi");
+        put('5', "jkl");
+        put('6', "mno");
+        put('7', "pqrs");
+        put('8', "tuv");
+        put('9', "wxyz");
+    }};
+    List<String> ans = new ArrayList<>();
+    StringBuilder sb = new StringBuilder();
+
+    public void dfs(char[] s, int u) {
+        int n = s.length;
+        if (u == n) {
+            ans.add(sb.toString());
+            return;
+        }
+        String str = map.get(s[u]);
+        for (int i = 0; i < str.length(); ++i) {
+            sb.append(str.charAt(i));
+            dfs(s, u + 1);
+            sb.deleteCharAt(u);
+        }
+    }
+
+    public List<String> letterCombinations(String digits) {
+        if (digits.equals("")) return new ArrayList<String>();
+        dfs(digits.toCharArray(), 0);
+        return ans;
+    } 
 }
 ```
 
