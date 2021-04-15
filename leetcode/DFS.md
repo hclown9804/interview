@@ -178,166 +178,6 @@ class Solution {
 }
 ```
 
-## [1572. 递归实现指数型枚举 II](https://www.acwing.com/problem/content/1574/)
-
-* 可包含重复数字的序列，从中随机选取任意多个数字
-
-> ```
-> 输入：3 1 2 2
-> 输出：[ , 1, 2, 1 2, 2 2, 1 2 2]
-> ```
-
-```java
-import java.util.*;
-
-class Main {
-    static boolean st[];
-
-    public static void dfs(int[] nums, int u) {
-        int n = nums.length;
-        if (u == n) {
-            for (int i = 0; i < n; ++i) {
-                if (st[i]) System.out.print(nums[i] + " ");
-            }
-            System.out.println();
-            return;
-        }
-        int k = u;
-        while (k < n && nums[k] == nums[u]) k++;
-        dfs(nums, k);
-        for (int i = u; i < k; ++i) {
-            st[i] = true;
-            dfs(nums, k);
-        }
-        for (int i = u; i < k; ++i) st[i] = false;
-    }
-    
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        int n = sc.nextInt();
-        int nums[] = new int[n];
-        for (int i = 0; i < n; ++i) nums[i] = sc.nextInt();
-        st = new boolean[n];
-        Arrays.sort(nums);
-        dfs(nums, 0);
-    }
-} 
-```
-
-## [93. 递归实现组合型枚举](https://www.acwing.com/problem/content/95/)
-
-* 从 1∼n 这 n 个整数中随机选出 m 个
-
-> ```
-> 输入：5 3
-> 输出：1 2 3 
->      1 2 4 
->      1 2 5 
->      1 3 4 
->      1 3 5 
->      1 4 5 
->      2 3 4 
->      2 3 5 
->      2 4 5 
->      3 4 5 
-> ```
-
-```java
-import java.util.*;
-
-class Main {
-    static int n, m, N = 30;
-    static int[] nums = new int[N];
-    static boolean st[] = new boolean[N];
-    
-    public static void dfs(int u, int last) {
-        if (u > m) {
-            for (int i = 1; i <= m; ++i) System.out.print(nums[i] + " ");
-            System.out.println();
-            return;
-        }
-        for (int i = 1; i <= n; ++i) {
-            if (!st[i] && i > last) {
-                st[i] = true;
-                nums[u] = i;
-                dfs(u + 1, i);
-                st[i] = false;
-            }
-        }
-    }
-    
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        n = sc.nextInt();
-        m = sc.nextInt();
-        nums[0] = 1;
-        dfs(1, 0);
-    }
-}
-```
-
-## [1573. 递归实现组合型枚举 II](https://www.acwing.com/problem/content/1575/)
-
-* 一个长度为 n 的可包含重复数字的序列，从中随机选取 m 个数字
-
-> ```
-> 输入：5 3
->      1 2 2 3 3
-> 输出：1 2 2
->      1 2 3
->      1 3 3
->      2 2 3
->      2 3 3
-> ```
-
-```java
-import java.util.*;
-
-class Main {
-    static int n, m;
-    static boolean st[];
-    // s:当前段选了几个数
-    // u:当前一共选了几个数
-    public static void dfs(int[] nums, int u, int s) {
-        int n = nums.length;
-        if (s > m) return;
-        if (s == m) {
-            for (int i = 0; i < u; ++i) {
-                if (st[i]) System.out.print(nums[i] + " ");
-            }
-            System.out.println();
-            return;
-        }
-        if (u == n) return;
-        
-        int k = u;
-        while (k < n && nums[k] == nums[u]) {
-            st[k++] = true;
-            s++;
-        }
-        // 这一段全选
-        dfs(nums, k, s);
-        // 从大到小枚举 
-        for (int i = k - 1; i >= u; --i) {
-            st[i] = false;
-            s--;
-            dfs(nums, k, s);
-        }
-    }
-    
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        n = sc.nextInt();
-        m = sc.nextInt();
-        int nums[] = new int[n];
-        for (int i = 0; i < n; ++i) nums[i] = sc.nextInt();
-        st = new boolean[n];
-        Arrays.sort(nums);
-        dfs(nums, 0, 0);
-    }
-} 
-```
-
 ## [60. 排列序列](https://leetcode-cn.com/problems/permutation-sequence/)
 
 * 第k个全排列序列
@@ -443,6 +283,45 @@ class Solution {
         dfs(digits.toCharArray(), 0);
         return ans;
     } 
+}
+```
+
+## [77. 组合](https://leetcode-cn.com/problems/combinations/)
+
+> ```
+> 输入: n = 4, k = 2
+> 输出:
+> [
+>   [2,4],
+>   [3,4],
+>   [2,3],
+>   [1,2],
+>   [1,3],
+>   [1,4],
+> ]
+> ```
+
+```java
+class Solution {
+    List<List<Integer>> ans = new ArrayList<>();
+    List<Integer> path = new ArrayList<>();
+
+    public void dfs(int n, int k, int u) {
+        if (path.size() + (n - u + 1) < k) return;
+        if (path.size() == k) {
+            ans.add(new ArrayList<Integer>(path));
+            return;
+        }
+        path.add(u);
+        dfs(n, k, u + 1);
+        path.remove(path.size() - 1);
+        dfs(n, k, u + 1);
+    }
+
+    public List<List<Integer>> combine(int n, int k) {
+        dfs(n, k, 1);
+        return ans;
+    }
 }
 ```
 
