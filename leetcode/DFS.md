@@ -1,8 +1,10 @@
 # DFS
 
+## 全排序类题目
+
 * 有重复必须先排序，并且在循环中判断是否为第一次出现的数
 
-## [46. 全排列](https://leetcode-cn.com/problems/permutations/)
+### [46. 全排列](https://leetcode-cn.com/problems/permutations/)
 
 * **没有重复**的数字序列
 
@@ -47,7 +49,7 @@ class Solution {
 }
 ```
 
-## [47. 全排列 II](https://leetcode-cn.com/problems/permutations-ii/)
+### [47. 全排列 II](https://leetcode-cn.com/problems/permutations-ii/)
 
 * 可**包含重复数字**的序列
 
@@ -91,7 +93,7 @@ class Solution {
 }
  ```
 
-## [面试题 08.07. 无重复字符串的排列组合](https://leetcode-cn.com/problems/permutation-i-lcci/)
+### [面试题 08.07. 无重复字符串的排列组合](https://leetcode-cn.com/problems/permutation-i-lcci/)
 
 * **无重复字符串**的排列组合
 
@@ -133,7 +135,7 @@ class Solution {
 }
 ```
 
-## [面试题 08.08. 有重复字符串的排列组合](https://leetcode-cn.com/problems/permutation-ii-lcci/)
+### [面试题 08.08. 有重复字符串的排列组合](https://leetcode-cn.com/problems/permutation-ii-lcci/)
 
 * **有重复字符串**的排列组合
 
@@ -178,7 +180,7 @@ class Solution {
 }
 ```
 
-## [60. 排列序列](https://leetcode-cn.com/problems/permutation-sequence/)
+### [60. 排列序列](https://leetcode-cn.com/problems/permutation-sequence/)
 
 * 第k个全排列序列
 
@@ -215,7 +217,7 @@ class Solution {
 }
 ```
 
-## [784. 字母大小写全排列](https://leetcode-cn.com/problems/letter-case-permutation/)
+### [784. 字母大小写全排列](https://leetcode-cn.com/problems/letter-case-permutation/)
 
 * 大小写转换
 
@@ -247,7 +249,9 @@ class Solution {
 }
 ```
 
-## [17. 电话号码的字母组合](https://leetcode-cn.com/problems/letter-combinations-of-a-phone-number/)
+## 组合类题目
+
+### [17. 电话号码的字母组合](https://leetcode-cn.com/problems/letter-combinations-of-a-phone-number/)
 
 ```java
 class Solution {
@@ -286,7 +290,7 @@ class Solution {
 }
 ```
 
-## [77. 组合](https://leetcode-cn.com/problems/combinations/)
+### [77. 组合](https://leetcode-cn.com/problems/combinations/)
 
 > ```
 > 输入: n = 4, k = 2
@@ -320,6 +324,43 @@ class Solution {
 
     public List<List<Integer>> combine(int n, int k) {
         dfs(n, k, 1);
+        return ans;
+    }
+}
+```
+
+### [39. 组合总和](https://leetcode-cn.com/problems/combination-sum/)
+
+> ```
+> 输入：candidates = [2,3,6,7], target = 7,
+> 所求解集为：
+> [
+>   [7],
+>   [2,2,3]
+> ]
+> ```
+
+```java
+class Solution {
+    List<List<Integer>> ans = new ArrayList<>();
+    List<Integer> path = new ArrayList<>();
+
+    public void dfs(int[] nums, int target, int u) {
+        int n = nums.length;
+        if (target == 0) {
+            ans.add(new ArrayList<>(path));
+            return;
+        }
+        if (u == n) return;
+        for (int i = 0; nums[u] * i <= target; ++i) {
+            dfs(nums, target - nums[u] * i, u + 1);
+            path.add(nums[u]);
+        }
+        for (int i = 0; nums[u] * i <= target; ++i) path.remove(path.size() - 1);
+    }
+
+    public List<List<Integer>> combinationSum(int[] candidates, int target) {
+        dfs(candidates, target, 0);
         return ans;
     }
 }
