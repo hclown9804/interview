@@ -468,3 +468,196 @@ class Solution {
 }
 ```
 
+## 子集类题目
+
+### [78. 子集](https://leetcode-cn.com/problems/subsets/)
+
+> ```
+> 输入：nums = [1,2,3]
+> 输出：[[],[1],[2],[1,2],[3],[1,3],[2,3],[1,2,3]]
+> ```
+
+```java
+class Solution {
+    public List<List<Integer>> subsets(int[] nums) {
+        List<List<Integer>> ans = new ArrayList<>();
+        int n = nums.length;
+        for (int i = 0; i < 1 << n; ++i) {
+            List<Integer> path = new ArrayList<>();
+            for (int j = 0; j < n; ++j) {
+                if ((i >> j & 1) == 1) path.add(nums[j]);
+            }
+            ans.add(path);
+        }
+        return ans;
+    }
+}
+```
+
+```java
+class Solution {
+    List<List<Integer>> ans = new ArrayList<>();
+    List<Integer> path = new ArrayList<>();
+
+    public void dfs(int[] nums, int u) {
+        if (u == nums.length) {
+            ans.add(new ArrayList<>(path));
+            return;
+        }
+        path.add(nums[u]);
+        dfs(nums, u + 1);
+        path.remove(path.size() - 1);
+        dfs(nums, u + 1);
+    }
+
+    public List<List<Integer>> subsets(int[] nums) {
+        dfs(nums, 0);
+        return ans;
+    }
+}
+```
+
+### [90. 子集 II](https://leetcode-cn.com/problems/subsets-ii/)
+
+> ```
+> 输入：nums = [1,2,2]
+> 输出：[[],[1],[1,2],[1,2,2],[2],[2,2]]
+> ```
+
+```java
+class Solution {
+    private List<List<Integer>> ans = new ArrayList<>();
+    private boolean[] st;
+
+    public void dfs(int u, int[] nums) {
+        int n = nums.length;
+        if (u == n) {
+            List<Integer> path = new ArrayList<>();
+            for (int i = 0; i < n; ++i) {
+                if (st[i]) path.add(nums[i]);
+            }
+            ans.add(path);
+            return;
+        }
+        int k = u;
+        while (k < n && nums[k]== nums[u]) k++;
+        dfs(k, nums);
+
+        for (int i = u; i < k; ++i) {
+            st[i] = true;
+            dfs(k, nums);
+        }
+
+        for (int i = u; i < k; ++i) st[i] = false;
+    }
+
+    public List<List<Integer>> subsetsWithDup(int[] nums) {
+        st = new boolean[nums.length];
+        Arrays.sort(nums);
+        dfs(0, nums);
+        return ans;
+    }
+}
+```
+
+## 单词搜索类题目
+
+### [79. 单词搜索](https://leetcode-cn.com/problems/word-search/)
+
+> 输入：board = [["A","B","C","E"],["S","F","C","S"],["A","D","E","E"]], word = "ABCCED"
+> 输出：true
+>
+> ![img](https://assets.leetcode.com/uploads/2020/11/04/word2.jpg)
+
+```java
+class Solution {
+    int[] dx = {-1, 0, 1, 0}, dy = {0, 1, 0, -1};
+
+    public boolean dfs(char[][] board, String word, int u, int x, int y) {
+        if (board[x][y] != word.charAt(u)) return false;
+        if (u == word.length() - 1) return true;
+
+        char t = board[x][y];
+        board[x][y] = '.';
+        for (int i = 0; i < 4; ++i) {
+            int a = x + dx[i], b = y + dy[i];
+            if (a < 0 || a >= board.length || b < 0 || b >= board[0].length || board[a][b] == '.') continue;
+            if (dfs(board, word, u + 1, a, b)) return true;
+        }
+        board[x][y] = t;
+        return false;
+    }
+
+    public boolean exist(char[][] board, String word) {
+        int n = board.length;
+        if (n == 0) return false;
+        int m = board[0].length;
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < m; ++j) {
+                if (dfs(board, word, 0, i, j)) return true;
+            }
+        }
+        return false;
+    }
+}
+```
+
+### [212. 单词搜索 II](https://leetcode-cn.com/problems/word-search-ii/)
+
+> 输入：board = [["o","a","a","n"],["e","t","a","e"],["i","h","k","r"],["i","f","l","v"]], words = ["oath","pea","eat","rain"]
+> 输出：["eat","oath"]
+>
+> ![img](https://assets.leetcode.com/uploads/2020/11/07/search1.jpg)
+
+```java
+class Solution {
+    class Node {
+        Node son[];
+        int id;
+        public Node() {
+            id = -1;
+            son = new Node[26];
+        }
+    }
+
+    Node root = new Node();
+    public void insert(String word, int id) {
+        Node cur = root;
+        for (char c: word.toCharArray()) {
+            int u = c - 'a';
+            if (cur.son[u] == null) cur.son[u] = new Node();
+            cur = cur.son[u];
+        }
+        cur.id = id; 
+    }
+
+    int[] dx = {-1, 0, 1, 0}, dy = {0, 1, 0, -1};
+    Set<Integer> ids = new HashSet<>();
+    public void dfs(char[][] board, int x, int y, Node cur) {
+        if (cur.id != -1) ids.add(cur.id);
+        char t = board[x][y];
+        board[x][y] = '.';
+        for (int i = 0; i < 4; ++i) {
+            int a = x + dx[i], b = y + dy[i];
+            if (a < 0 || a >= board.length || b < 0 || b >= board[0].length || board[a][b] == '.') continue;
+            int u = board[a][b] - 'a';
+            if (cur.son[u] != null) dfs(board, a, b, cur.son[u]);
+        }
+        board[x][y] = t;
+    }
+
+    public List<String> findWords(char[][] board, String[] words) {
+        for (int i = 0; i < words.length; ++i) insert(words[i], i);
+        for (int i = 0; i < board.length; ++i) {
+            for (int j = 0; j < board[i].length; ++j) {
+                int u = board[i][j] - 'a';
+                if (root.son[u] != null) dfs(board, i, j, root.son[u]);
+            }
+        }
+        List<String> ans = new ArrayList<>();
+        for (Integer id: ids) ans.add(words[id]);
+        return ans;
+    }
+}
+```
+
