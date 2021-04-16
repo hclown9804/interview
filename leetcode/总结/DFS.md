@@ -449,24 +449,3 @@ class Solution {
 }
 ```
 
-### [377. 组合总和 Ⅳ](https://leetcode-cn.com/problems/combination-sum-iv/)
-
-* 非DFS问题
-* f[j] 表示总和为j的所有方案数
-
-```java
-class Solution {
-    public int combinationSum4(int[] nums, int target) {
-        int n = nums.length;
-        int[] f = new int[target + 1];
-        f[0] = 1;
-        for (int j = 0; j <= target; ++j) {
-            for (int x: nums) {
-                if (j >= x) f[j] += f[j - x];
-            }
-        }
-        return f[target];
-    }
-}
-```
-
