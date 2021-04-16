@@ -278,7 +278,7 @@ class Solution {
         for (int i = 0; i < str.length(); ++i) {
             sb.append(str.charAt(i));
             dfs(s, u + 1);
-            sb.deleteCharAt(u);
+            sb.deleteCharAt(sb.length() - 1);
         }
     }
 
@@ -311,6 +311,7 @@ class Solution {
     List<Integer> path = new ArrayList<>();
 
     public void dfs(int n, int k, int u) {
+        // 剪枝
         if (path.size() + (n - u + 1) < k) return;
         if (path.size() == k) {
             ans.add(new ArrayList<Integer>(path));
@@ -387,31 +388,28 @@ class Solution {
 class Solution {
     List<List<Integer>> ans = new ArrayList<>();
     List<Integer> path = new ArrayList<>();
-    boolean st[];
 
-    public void dfs(int[] cs, int target, int u) {
+    public void dfs(int[] nums, int target, int u) {
+        int n = nums.length;
         if (target == 0) {
             ans.add(new ArrayList<>(path));
             return;
         }
-
-        if (u == cs.length) return;
+        if (u == n) return;
 
         int k = u + 1;
-        while (k < cs.length && cs[k] == cs[u]) k++;
+        while (k < n && nums[k] == nums[u]) k++;
         int cnt = k - u;
 
-        for (int i = 0; cs[u] * i <= target && i <= cnt; ++i) {
-            dfs(cs, target - cs[u] * i, k);
-            path.add(cs[u]);
+        for (int i = 0; nums[u] * i <= target && i <= cnt; ++i) {
+            dfs(nums, target - nums[u] * i, k);
+            path.add(nums[u]);
         }
-
-        for (int i = 0; cs[u] * i <= target && i <= cnt; ++i) path.remove(path.size() - 1);
+        for (int i = 0; nums[u] * i <= target && i <= cnt; ++i) path.remove(path.size() - 1);
     }
 
     public List<List<Integer>> combinationSum2(int[] candidates, int target) {
-        Arrays.sort(candidates);    
-        st = new boolean[candidates.length];
+        Arrays.sort(candidates);
         dfs(candidates, target, 0);
         return ans;
     }
@@ -426,14 +424,14 @@ class Solution {
 class Solution {
     List<List<Integer>> ans = new ArrayList<>();
     List<Integer> path = new ArrayList<>();
-    int n = 9;
+    int len = 9;
 
     public void dfs(int k, int target, int u, int sum) {
-        if (path.size() + (n - u + 1) < k || path.size() > k)  return;
+        if (path.size() + (len - u + 1) < k || path.size() > k) return;
         if (target == sum && path.size() == k) {
             ans.add(new ArrayList<>(path));
             return;
-        }  
+        }
         path.add(u);
         sum += u;
         dfs(k, target, u + 1, sum);
