@@ -331,6 +331,8 @@ class Solution {
 
 ### [39. 组合总和](https://leetcode-cn.com/problems/combination-sum/)
 
+* 无重复数字且可以重复使用
+
 > ```
 > 输入：candidates = [2,3,6,7], target = 7,
 > 所求解集为：
@@ -361,6 +363,87 @@ class Solution {
 
     public List<List<Integer>> combinationSum(int[] candidates, int target) {
         dfs(candidates, target, 0);
+        return ans;
+    }
+}
+```
+
+### [40. 组合总和 II](https://leetcode-cn.com/problems/combination-sum-ii/)
+
+* 数字可重复且只能用一次
+
+> ```
+> 输入: candidates = [10,1,2,7,6,1,5], target = 8,
+> 所求解集为:
+> [
+>   [1, 7],
+>   [1, 2, 5],
+>   [2, 6],
+>   [1, 1, 6]
+> ]
+> ```
+
+```java
+class Solution {
+    List<List<Integer>> ans = new ArrayList<>();
+    List<Integer> path = new ArrayList<>();
+    boolean st[];
+
+    public void dfs(int[] cs, int target, int u) {
+        if (target == 0) {
+            ans.add(new ArrayList<>(path));
+            return;
+        }
+
+        if (u == cs.length) return;
+
+        int k = u + 1;
+        while (k < cs.length && cs[k] == cs[u]) k++;
+        int cnt = k - u;
+
+        for (int i = 0; cs[u] * i <= target && i <= cnt; ++i) {
+            dfs(cs, target - cs[u] * i, k);
+            path.add(cs[u]);
+        }
+
+        for (int i = 0; cs[u] * i <= target && i <= cnt; ++i) path.remove(path.size() - 1);
+    }
+
+    public List<List<Integer>> combinationSum2(int[] candidates, int target) {
+        Arrays.sort(candidates);    
+        st = new boolean[candidates.length];
+        dfs(candidates, target, 0);
+        return ans;
+    }
+}
+```
+
+### [216. 组合总和 III](https://leetcode-cn.com/problems/combination-sum-iii/)
+
+* 1-9 九个数字选取k个数，不能重复使用
+
+```java
+class Solution {
+    List<List<Integer>> ans = new ArrayList<>();
+    List<Integer> path = new ArrayList<>();
+    int n = 9;
+
+    public void dfs(int k, int target, int u, int sum) {
+        if (path.size() + (n - u + 1) < k || path.size() > k)  return;
+        if (target == sum && path.size() == k) {
+            ans.add(new ArrayList<>(path));
+            return;
+        }  
+        path.add(u);
+        sum += u;
+        dfs(k, target, u + 1, sum);
+        path.remove(path.size() - 1);
+        sum -= u;
+        dfs(k, target, u + 1, sum);
+    }
+
+    public List<List<Integer>> combinationSum3(int k, int n) {
+        dfs(k, n, 1, 0);
         return ans;
     }
 }
