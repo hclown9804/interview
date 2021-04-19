@@ -661,3 +661,338 @@ class Solution {
 }
 ```
 
+# BFS
+
+## 网格类题目
+
+### [130. 被围绕的区域](https://leetcode-cn.com/problems/surrounded-regions/)
+
+> ```
+> 输入: board = [["X","X","X","X"],["X","O","O","X"],["X","X","O","X"],["X","O","X","X"]]
+> 输出：[["X","X","X","X"],["X","X","X","X"],["X","X","X","X"],["X","O","X","X"]]
+> 解释：被围绕的区间不会存在于边界上，换句话说，任何边界上的 'O' 都不会被填充为 'X'。 任何不在边界上，或不与边界上的 'O' 相连的 'O' 最终都会被填充为 'X'。如果两个元素在水平或垂直方向相邻，则称它们是“相连”的。
+> ```
+>
+> ![img](https://assets.leetcode.com/uploads/2021/02/19/xogrid.jpg)
+
+```java
+class Solution {
+    public void solve(char[][] board) {
+        int[] dx = {-1, 0, 1, 0}, dy = {0, 1, 0, -1};
+        int n = board.length;
+        if (n == 0) return;
+        int m = board[0].length;
+        Queue<int[]> queue = new LinkedList<>();
+        for (int i = 0; i < n; ++i) {
+            if (board[i][0] == 'O') queue.offer(new int[]{i, 0});
+            if (board[i][m - 1] == 'O') queue.offer(new int[]{i, m - 1});
+        }
+        for (int i = 1; i < m - 1; ++i) {
+            if (board[0][i] == 'O') queue.offer(new int[]{0, i});
+            if (board[n - 1][i] == 'O') queue.offer(new int[]{n - 1, i});
+        }
+        while (!queue.isEmpty()) {
+            int[] t = queue.poll();
+            int x = t[0], y = t[1];
+            board[x][y] = '.';
+            for (int i = 0; i < 4; ++i) {
+                int a = x + dx[i], b = y + dy[i];
+                if (a < 0 || a >= n || b < 0 || b >= m || board[a][b] != 'O') continue;
+                queue.offer(new int[]{a, b});
+            }
+        }
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < m; ++j) {
+                if (board[i][j] == '.') board[i][j] = 'O';
+                else if (board[i][j] == 'O') board[i][j] = 'X';
+            }
+        }
+    }
+}
+```
+
+### [200. 岛屿数量](https://leetcode-cn.com/problems/number-of-islands/)
+
+> ```
+> 输入：grid = [
+>       ["1","1","1","1","0"],
+>       ["1","1","0","1","0"],
+>       ["1","1","0","0","0"],
+>       ["0","0","0","0","0"]
+>     ]
+> 输出：1
+> ```
+
+```java
+class Solution {
+    public int numIslands(char[][] grid) {
+        int[] dx = {-1, 0, 1, 0}, dy = {0, 1, 0, -1};
+        int n = grid.length;
+        if (n == 0) return 0;
+        int m = grid[0].length;
+        int ans = 0;
+
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < m; ++j) {
+                if (grid[i][j] == '1') {
+                    ++ans;
+                    grid[i][j] = '0';
+                    Queue<int[]> queue = new LinkedList<>();
+                    queue.offer(new int[]{i, j});
+                    while (!queue.isEmpty()) {
+                        int[] t = queue.poll();
+                        int x = t[0], y = t[1];
+                        for (int k = 0; k < 4; ++k) {
+                            int a = x + dx[k], b = y + dy[k];
+                            if (a < 0 || a >= n || b < 0 || b >= m || grid[a][b] == '0') continue;
+                            queue.offer(new int[]{a, b});
+                            grid[a][b] = '0';
+                        }
+                    }
+                }
+            }
+        }
+        return ans;
+    }
+}
+```
+
+### [695. 岛屿的最大面积](https://leetcode-cn.com/problems/max-area-of-island/)
+
+> ```
+> 输入：[[0,0,1,0,0,0,0,1,0,0,0,0,0],
+>      [0,0,0,0,0,0,0,1,1,1,0,0,0],
+>      [0,1,1,0,1,0,0,0,0,0,0,0,0],
+>      [0,1,0,0,1,1,0,0,1,0,1,0,0],
+>      [0,1,0,0,1,1,0,0,1,1,1,0,0],
+>      [0,0,0,0,0,0,0,0,0,0,1,0,0],
+>      [0,0,0,0,0,0,0,1,1,1,0,0,0],
+>      [0,0,0,0,0,0,0,1,1,0,0,0,0]]
+> 
+> 输出：6
+> ```
+>
+> ![](https://i.loli.net/2021/04/19/xOSNjQzv84dkmpr.png)
+
+```java
+class Solution {
+    public int maxAreaOfIsland(int[][] grid) {
+        int[] dx = {-1, 0, 1, 0}, dy = {0, 1, 0, -1};
+        int n = grid.length;
+        if (n == 0) return 0;
+        int m = grid[0].length;
+        int ans = 0;
+
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < m; ++j) {
+                if (grid[i][j] == 1) {
+                    grid[i][j] = 0;
+                    Queue<int[]> queue = new LinkedList<>();
+                    queue.offer(new int[]{i, j});
+                    int tmp = 0;
+                    while (!queue.isEmpty()) {
+                        int[] t = queue.poll();
+                        int x = t[0], y = t[1];
+                        tmp++;
+                        for (int k = 0; k < 4; ++k) {
+                            int a = x + dx[k], b = y + dy[k];
+                            if (a < 0 || a >= n || b < 0 || b >= m || grid[a][b] == 0) continue;
+                            queue.offer(new int[]{a, b});
+                            grid[a][b] = 0;
+                        }
+                    }
+                    ans = Math.max(ans, tmp);
+                }
+            }
+        }
+        return ans;
+    }
+}
+```
+
+### [面试题 16.19. 水域大小](https://leetcode-cn.com/problems/pond-sizes-lcci/)
+
+> ```
+> 输入：
+> [
+>   [0,2,1,0],
+>   [0,1,0,1],
+>   [1,1,0,1],
+>   [0,1,0,1]
+> ]
+> 输出： [1,2,4]
+> ```
+
+* 此题与上面的题目不同，需要判断周围8个点的坐标，而不是上下左右四个。
+
+```java
+class Solution {
+    public int[] pondSizes(int[][] land) {
+        int n = land.length;
+        if (n == 0) return new int[]{};
+        int m = land[0].length;
+        List<Integer> ans = new ArrayList<>();
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < m; ++j) {
+                if (land[i][j] == 0) {
+                    int tmp = 0;
+                    land[i][j] = 1;
+                    Queue<int[]> queue = new LinkedList<>();
+                    queue.offer(new int[]{i, j});
+                    while (!queue.isEmpty()) {
+                        int[] t = queue.poll();
+                        int x = t[0], y = t[1];
+                        tmp++;
+                        for (int k1 = x - 1; k1 <= x + 1; ++k1) {
+                            for (int k2 = y - 1; k2 <= y + 1; ++k2) {
+                                if (k1 == x && k2 == y) continue;
+                                if (k1 < 0 || k1 >= n || k2 < 0 || k2 >= m || land[k1][k2] != 0) continue;
+                                land[k1][k2] = 1;
+                                queue.offer(new int[]{k1, k2});
+                            }
+                        }
+                    }
+                    ans.add(tmp);
+                }
+            }
+        }
+        int[] res = ans.stream().mapToInt(Integer::valueOf).toArray();
+        Arrays.sort(res);
+        return res;
+    }
+}
+```
+
+### [1162. 地图分析](https://leetcode-cn.com/problems/as-far-from-land-as-possible/)
+
+> ```
+> 输入：[[1,0,1],
+> 	  [0,0,0],
+> 	  [1,0,1]]
+> 输出：2
+> 解释： 
+> 海洋单元格 (1, 1) 和所有陆地单元格之间的距离都达到最大，最大距离为 2
+> ```
+
+```java
+class Solution {
+    public int maxDistance(int[][] grid) {
+        int[] dx = {-1, 0, 1, 0}, dy = {0, 1, 0, -1};
+        int n = grid.length;
+        if (n == 0) return 0;
+        int m = grid[0].length;
+        int ans = -1;
+        Queue<int[]> queue = new LinkedList<>();
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < m; ++j) {
+                if (grid[i][j] == 1) queue.offer(new int[]{i, j});
+            }
+        }
+        if (queue.size() == n * n) return -1;
+        while (!queue.isEmpty()) {
+            ans++;
+            int size = queue.size();
+            while (size-- > 0) {
+                int[] t = queue.poll();
+                int x = t[0], y = t[1];
+                for (int i = 0; i < 4; ++i) {
+                    int a = x + dx[i], b = y + dy[i];
+                    if (a < 0 || a >= n || b < 0 || b >= m || grid[a][b] != 0) continue;
+                    queue.offer(new int[]{a, b});
+                    grid[a][b] = 2;
+                }
+            }
+        }
+        return ans;
+    }
+}
+```
+
+### [994. 腐烂的橘子](https://leetcode-cn.com/problems/rotting-oranges/)
+
+> ```
+> 输入：[[2,1,1],[1,1,0],[0,1,1]]
+> 输出：4
+> ```
+
+```java
+class Solution {
+    public int orangesRotting(int[][] grid) {
+        int n = grid.length;
+        if (n == 0) return 0;
+        int m = grid[0].length;
+        int ans = 0, cnt = 0;
+        Queue<int[]> queue = new LinkedList<>();
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < m; ++j) {
+                if (grid[i][j] == 2) queue.offer(new int[]{i, j});
+                else if (grid[i][j] == 1) cnt++;
+            }
+        }
+
+        if (cnt == 0) return 0;
+
+        int[] dx = {-1, 0, 1, 0}, dy = {0, 1, 0, -1};
+        while (!queue.isEmpty()) {
+            ans++;
+            int size = queue.size();
+            while (size-- > 0) {
+                int[] t = queue.poll();
+                int x = t[0], y = t[1];
+                for (int i = 0; i < 4; ++i) {
+                    int a = x + dx[i], b = y + dy[i];
+                    if (a >= 0 && a < n && b >= 0 && b < m && grid[a][b] == 1) {
+                        cnt--;
+                        grid[a][b] = 2;
+                        queue.offer(new int[]{a, b});
+                    }
+                }
+            }
+        }
+        return cnt == 0 ? ans - 1 : -1;
+    }
+}
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
