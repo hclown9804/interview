@@ -1372,11 +1372,139 @@ class Solution {
 }
 ```
 
+### [143. 重排链表](https://leetcode-cn.com/problems/reorder-list/)
 
+> ```
+> 给定链表 1->2->3->4->5, 重新排列为 1->5->2->4->3.
+> ```
 
+```java
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public void reorderList(ListNode head) {
+        if (head == null) return;
+        int n = 0;
+        for (ListNode p = head; p != null; p = p.next) n++;
+        ListNode mid = head;
+        for (int i = 0; i < (n + 1) / 2 - 1; ++i) mid = mid.next;
+        ListNode a = mid, b = a.next;
+        for (int i = 0; i < n / 2; ++i) {
+            ListNode c = b.next;
+            b.next = a;
+            a = b;
+            b = c;
+        }
+        ListNode p = head, q = a;
+        for (int i = 0; i < n / 2; ++i) {
+            ListNode o = q.next;
+            q.next = p.next;
+            p.next = q;
+            p = q.next;
+            q = o;
+        }
+        if (n % 2 == 1) mid.next = null;
+        else mid.next.next = null;
+    }
+}
+```
 
+### [25. K 个一组翻转链表](https://leetcode-cn.com/problems/reverse-nodes-in-k-group/)
 
+> ```
+> 输入：head = [1,2,3,4,5], k = 2
+> 输出：[2,1,4,3,5]
+> ```
+>
+> ![img](https://assets.leetcode.com/uploads/2020/10/03/reverse_ex1.jpg)
 
+```java
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public ListNode reverseKGroup(ListNode head, int k) {
+        ListNode dummy = new ListNode(-1);
+        dummy.next = head;
+        ListNode p = dummy;
+        while (p != null) {
+            ListNode q = p;
+            for (int i = 0; i < k && q != null; ++i) q = q.next;
+            if (q == null) break;
+            ListNode a = p.next, b = a.next;
+            for (int i = 0; i < k - 1; ++i) {
+                ListNode c = b.next;
+                b.next = a;
+                a = b;
+                b = c;
+            }
+            ListNode t = p.next;
+            p.next = a;
+            t.next = b;
+            p = t;
+        }
+        return dummy.next;
+    }
+}
+```
+
+### [234. 回文链表](https://leetcode-cn.com/problems/palindrome-linked-list/)
+
+> ```
+> 输入: 1->2->2->1
+> 输出: true
+> ```
+
+```java
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public boolean isPalindrome(ListNode head) {
+        int n = 0;
+        for (ListNode p = head; p != null; p = p.next) n++;
+        if (n == 1) return true;
+        ListNode a = head;
+        for (int i = 0; i < (n + 1) / 2; ++i) a = a.next;
+        ListNode b = a.next;
+        for (int i = 0; i < n / 2 - 1; ++i) {
+            ListNode c = b.next;
+            b.next = a;
+            a = b;
+            b = c;
+        }
+        ListNode p = head, q = a;
+        for (int i = 0; i < n / 2; ++i) {
+            if (p.val != q.val) return false;
+            p = p.next;
+            q = q.next;
+        }
+        return true;
+    }
+}
+```
 
 
 
