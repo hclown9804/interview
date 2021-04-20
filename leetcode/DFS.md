@@ -1210,7 +1210,52 @@ class Solution {
 }
 ```
 
+### [445. 两数相加 II](https://leetcode-cn.com/problems/add-two-numbers-ii/)
 
+> ```
+> 输入：(7 -> 2 -> 4 -> 3) + (5 -> 6 -> 4)
+> 输出：7 -> 8 -> 0 -> 7
+> ```
+
+```java
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        Stack<Integer> s1 = new Stack<>();
+        Stack<Integer> s2 = new Stack<>();      
+        while (l1 != null) {
+            s1.push(l1.val);
+            l1 = l1.next;
+        }
+        while (l2 != null) {
+            s2.push(l2.val);
+            l2 = l2.next;
+        }
+        ListNode cur = null;
+        int c = 0;
+        while (!s1.isEmpty() || !s2.isEmpty() || c != 0) {
+            int a = s1.isEmpty() ? 0 : s1.pop();
+            int b = s2.isEmpty() ? 0 : s2.pop();
+
+            int t = a + b + c;
+            c = t / 10; 
+            ListNode tmp = new ListNode(t % 10);
+            tmp.next = cur;
+            cur = tmp;
+        }
+        return cur;
+    }
+}
+```
 
 
 
