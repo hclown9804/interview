@@ -991,7 +991,38 @@ class Solution {
 }
 ````
 
+### [210. 课程表 II](https://leetcode-cn.com/problems/course-schedule-ii/)
 
+> ```
+> 输入: 4, [[1,0],[2,0],[3,1],[3,2]]
+> 输出: [0,1,2,3] or [0,2,1,3]
+> 解释: 总共有 4 门课程。要学习课程 3，你应该先完成课程 1 和课程 2。并且课程 1 和课程 2 都应该排在课程 0 之后。
+>      因此，一个正确的课程顺序是 [0,1,2,3] 。另一个正确的排序是 [0,2,1,3] 。
+> ```
+
+```java
+class Solution {
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        int[] indegrees = new int[numCourses];
+        for (int[] pre: prerequisites) indegrees[pre[0]]++;
+        Queue<Integer> queue = new LinkedList<>();
+        for (int i = 0; i < numCourses; ++i) {
+            if (indegrees[i] == 0) queue.offer(i);
+        }
+        int cnt = 0;
+        int[] ans = new int[numCourses];
+        while (!queue.isEmpty()) {
+            int t = queue.poll();
+            ans[cnt++] = t;
+            for (int[] cur: prerequisites)  {
+                if (cur[1] == t && --indegrees[cur[0]] == 0) queue.offer(cur[0]);
+            }
+        }
+        if (cnt == numCourses) return ans;
+        return new int[0];
+    }
+}
+```
 
 
 
