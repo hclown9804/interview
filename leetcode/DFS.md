@@ -1024,11 +1024,86 @@ class Solution {
 }
 ```
 
+## 染色类
 
+### [733. 图像渲染](https://leetcode-cn.com/problems/flood-fill/)
 
+> ```
+> 输入: 
+>     image = [[1,1,1],[1,1,0],[1,0,1]]
+>     sr = 1, sc = 1, newColor = 2
+> 输出: [[2,2,2],[2,2,0],[2,0,1]]
+> 解析: 
+>     在图像的正中间，(坐标(sr,sc)=(1,1)),
+>     在路径上所有符合条件的像素点的颜色都被更改成2。
+>     注意，右下角的像素没有更改为2，
+>     因为它不是在上下左右四个方向上与初始点相连的像素点。
+> ```
 
+```java
+class Solution {
+    public int[][] floodFill(int[][] image, int sr, int sc, int newColor) {
+        int[] dx = {-1, 0, 1, 0}, dy = {0, 1, 0, -1};
+        int n = image.length;
+        if (n == 0) return image;
+        int m = image[0].length;
+        int c = image[sr][sc];
+        if (c == newColor) return image;
 
+        Queue<int[]> queue = new LinkedList<>();
+        queue.offer(new int[]{sr, sc});
+        image[sr][sc] = newColor;
+        while (!queue.isEmpty()) {
+            int[] t = queue.poll();
+            int x = t[0], y = t[1];
+            for (int i = 0; i < 4; ++i) {
+                int a = x + dx[i], b = y + dy[i];
+                if (a < 0 || a >= n || b < 0 || b >= m || image[a][b] != c) continue;
+                image[a][b] = newColor;
+                queue.offer(new int[]{a, b});
+            }
+        }
+        return image;
+    }
+}
+```
 
+### [1042. 不邻接植花](https://leetcode-cn.com/problems/flower-planting-with-no-adjacent/)
+
+> ```
+> 输入：n = 3, paths = [[1,2],[2,3],[3,1]]
+> 输出：[1,2,3]
+> 解释：
+> 花园 1 和 2 花的种类不同。
+> 花园 2 和 3 花的种类不同。
+> 花园 3 和 1 花的种类不同。
+> 因此，[1,2,3] 是一个满足题意的答案。其他满足题意的答案有 [1,2,4]、[1,4,2] 和 [3,2,1]
+> ```
+
+```java
+class Solution {
+    public int[] gardenNoAdj(int n, int[][] paths) {
+        int[] ans = new int[n];
+        List<List<Integer>> adjacency = new ArrayList<>();
+        for (int i = 0; i <= n; ++i) adjacency.add(new ArrayList<>());
+        for (int[] cur: paths) {
+            adjacency.get(cur[0]).add(cur[1]);
+            adjacency.get(cur[1]).add(cur[0]);
+        }
+        for (int i = 1; i <= n; ++i) {
+            boolean[] color = new boolean[5];
+            for (int id: adjacency.get(i)) color[ans[id - 1]] = true;
+            for (int j = 1; j <= 4; ++j) {
+                if (!color[j]) {
+                    ans[i - 1] = j;
+                    break;
+                }
+            }
+        }
+        return ans;
+    }
+}
+```
 
 
 
