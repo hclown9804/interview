@@ -1257,7 +1257,39 @@ class Solution {
 }
 ```
 
+## 翻转链表类
 
+### [206. 反转链表](https://leetcode-cn.com/problems/reverse-linked-list/)
+
+> ```
+> 输入: 1->2->3->4->5->NULL
+> 输出: 5->4->3->2->1->NULL
+> ```
+
+````java
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public ListNode reverseList(ListNode head) {
+        ListNode cur = head, prev = null;
+        while (cur != null) {
+            ListNode next = cur.next;
+            cur.next = prev;
+            prev = cur;
+            cur = next;
+        }
+        return prev;
+    }
+}
+````
 
 
 
