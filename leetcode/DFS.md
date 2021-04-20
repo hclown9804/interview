@@ -1332,7 +1332,45 @@ class Solution {
 }
 ```
 
+### [剑指 Offer 06. 从尾到头打印链表](https://leetcode-cn.com/problems/cong-wei-dao-tou-da-yin-lian-biao-lcof/)
 
+> ```
+> 输入：head = [1,3,2]
+> 输出：[2,3,1]
+> ```
+
+```java
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public int[] reversePrint(ListNode head) {
+        if (head == null) return new int[]{};
+        ListNode dummy = new ListNode(-1);
+        dummy.next = head;
+        ListNode a = dummy;
+        ListNode b = a.next, c = b.next;
+        while (c != null && b != null) {
+            ListNode t = c.next;
+            c.next = b;
+            b = c;
+            c = t; 
+        }  
+        a.next.next = c;
+        a.next = b; 
+        List<Integer> ans = new ArrayList<>();
+        for (ListNode p = dummy.next; p != null; p = p.next) {
+            ans.add(p.val);
+        }
+        return ans.stream().mapToInt(Integer::valueOf).toArray();
+    }
+}
+```
 
 
 
