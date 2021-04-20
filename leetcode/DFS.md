@@ -954,7 +954,42 @@ class Solution {
 }
 ```
 
+## 课程表类题目
 
+### [207. 课程表](https://leetcode-cn.com/problems/course-schedule/)
+
+> ```
+> 输入：numCourses = 2, prerequisites = [[1,0]]
+> 输出：true
+> 解释：总共有 2 门课程。学习课程 1 之前，你需要完成课程 0 。这是可能的。
+> ```
+
+````java
+class Solution {
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        int[] indegrees = new int[numCourses];
+        List<List<Integer>> adjacency = new ArrayList<>();
+        Queue<Integer> queue = new LinkedList<>();
+        for (int i = 0; i < numCourses; ++i) adjacency.add(new ArrayList<>());
+        for (int[] pre: prerequisites) {
+            indegrees[pre[0]]++;
+            adjacency.get(pre[1]).add(pre[0]);
+        } 
+
+        for (int i = 0; i < numCourses; ++i) {
+            if (indegrees[i] == 0) queue.offer(i);
+        }
+        while (!queue.isEmpty()) {
+            int t = queue.poll();
+            numCourses--;
+            for (int cur: adjacency.get(t)) {
+                if (--indegrees[cur] == 0) queue.offer(cur);
+            }
+        }
+        return numCourses == 0;
+    }
+}
+````
 
 
 
