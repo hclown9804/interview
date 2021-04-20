@@ -1105,9 +1105,110 @@ class Solution {
 }
 ```
 
+# 链表
 
+## 链表基础
 
+### 自定义链表
 
+```java
+public class ListNode {
+    int val;
+    ListNode next;
+    ListNode() {}
+    ListNode(int val) {this.val = val;}
+    ListNode(int val, ListNode next) {this.val = val; this.next = next;}
+} 
+```
+
+### 生成链表
+
+```java
+    public static ListNode createList(int[] nums) {
+        ListNode dummy = new ListNode(-1);
+        ListNode cur = dummy;
+        for (int num: nums) {
+            cur = cur.next = new ListNode(num);
+        }
+        return dummy.next;
+    }
+
+    public static ListNode createRandomList(int n) {
+        ListNode dummy = new ListNode(-1);
+        ListNode cur = dummy;
+        Random random = new Random();
+        while (n-- > 0){
+            cur = cur.next = new ListNode(random.nextInt() % 1001);
+        }
+        return dummy.next;
+    }
+```
+
+### 输出链表
+
+```java
+    public static void printList(ListNode head) {
+        while (head != null) {
+            if (head.next != null) System.out.print(head.val + "->");
+            else System.out.print(head.val);
+            head = head.next;
+        }
+        System.out.println();
+    }
+    @Override
+    public String toString() {
+        ListNode cur = this;
+        StringBuilder sb = new StringBuilder();
+        while (cur != null) {
+            sb.append(cur.val);
+            if (cur.next != null) sb.append("->");
+            cur = cur.next;
+        }
+        return sb.toString();
+    }
+
+```
+
+## 加法题
+
+### [2. 两数相加](https://leetcode-cn.com/problems/add-two-numbers/)
+
+> ```
+> 输入：l1 = [2,4,3], l2 = [5,6,4]
+> 输出：[7,0,8]
+> 解释：342 + 465 = 807.
+> ```
+
+```java
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        ListNode dummy = new ListNode(-1);
+        ListNode cur = dummy;
+        int c = 0;
+        while (l1 != null || l2 != null) {
+            int a = l1 == null ? 0 : l1.val;
+            int b = l2 == null ? 0 : l2.val;
+            int t = a + b + c;
+            cur = cur.next = new ListNode(t % 10);
+            c = t / 10;
+            if (l1 != null) l1 = l1.next;
+            if (l2 != null) l2 = l2.next;
+        }
+        if (c == 1) cur.next = new ListNode(1);
+        return dummy.next;
+    }
+}
+```
 
 
 
