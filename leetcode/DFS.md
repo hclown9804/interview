@@ -1542,7 +1542,41 @@ public class Solution {
 }
 ```
 
+### [141. 环形链表](https://leetcode-cn.com/problems/linked-list-cycle/)
 
+> ```
+> 输入：head = [3,2,0,-4], pos = 1
+> 输出：true
+> 解释：链表中有一个环，其尾部连接到第二个节点。
+> ```
+>
+> ![img](https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2018/12/07/circularlinkedlist.png)
+
+```java
+/**
+ * Definition for singly-linked list.
+ * class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) {
+ *         val = x;
+ *         next = null;
+ *     }
+ * }
+ */
+public class Solution {
+    public boolean hasCycle(ListNode head) {
+        if (head == null) return false;
+        ListNode slow = head, fast = head.next;
+        while (slow != fast) {
+            if (fast == null || fast.next == null) return false;
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        return true;
+    }
+}
+```
 
 
 
