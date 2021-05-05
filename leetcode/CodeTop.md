@@ -1,6 +1,6 @@
 # CodeTop
 
-### [3. 无重复字符的最长子串](https://leetcode-cn.com/problems/longest-substring-without-repeating-characters/)
+### [3. 无重复字符的最长子串(mid)](https://leetcode-cn.com/problems/longest-substring-without-repeating-characters/) 
 
 > ```
 > 输入: s = "abcabcbb"
@@ -47,7 +47,7 @@ class Solution {
 }
 ```
 
-### [718. 最长重复子数组](https://leetcode-cn.com/problems/maximum-length-of-repeated-subarray/)
+### [718. 最长重复子数组(mid)](https://leetcode-cn.com/problems/maximum-length-of-repeated-subarray/)
 
 > ```
 > 输入：
@@ -191,7 +191,7 @@ class Solution {
 }
 ```
 
-### [110. 平衡二叉树](https://leetcode-cn.com/problems/balanced-binary-tree/)
+### [110. 平衡二叉树(easy)](https://leetcode-cn.com/problems/balanced-binary-tree/)
 
 > ```
 > 输入：root = [3,9,20,null,null,15,7]
@@ -200,7 +200,7 @@ class Solution {
 >
 > ![img](https://assets.leetcode.com/uploads/2020/10/06/balance_1.jpg)
 
-####  自顶向下递归
+####  思路一：自顶向下递归
 
 计算每个节点左子树和右子树的高度，判断高度差是否超过1，同时递归判断左右子树是否为平衡树。
 
@@ -220,7 +220,7 @@ class Solution {
 }
 ```
 
-#### 自底向上递归
+#### 思路二：自底向上递归
 
 提前终止不符合的情况，直接返回。
 
@@ -243,7 +243,46 @@ class Solution {
 }
 ```
 
+### [124. 二叉树中的最大路径和(hard)](https://leetcode-cn.com/problems/binary-tree-maximum-path-sum/)
 
+> ```
+> 输入：root = [-10,9,20,null,null,15,7]
+> 输出：42
+> 解释：最优路径是 15 -> 20 -> 7 ，路径和为 15 + 20 + 7 = 42
+> ```
+>
+> ![img](https://assets.leetcode.com/uploads/2020/10/13/exx2.jpg)
+
+#### 思路：DFS
+
+1.使用全局变量 $ans$ 记录结果；
+
+2.计算单个节点的路径和，递归计算左右子树的路径和，如果小于 $0$ 则看作 $0$ ；
+
+3.更新当前的 $ans$ 结果，与左右子树路径和与当前节点值之和；
+
+4.返回子树的路径和，即左右子树路径和的较大值与当前节点值之和。
+
+时间复杂度：$O(N)$
+
+```java
+class Solution {
+    int ans = Integer.MIN_VALUE;
+    public int maxPathSum(TreeNode root) {
+        if (root == null) return 0;
+        dfs(root);
+        return ans;
+    }
+
+    public int dfs(TreeNode root) {
+        if (root == null) return 0;
+        int left = Math.max(0, dfs(root.left));
+        int right = Math.max(0, dfs(root.right));
+        ans = Math.max(ans, root.val + left + right);
+        return root.val + Math.max(left, right);
+    }
+}
+```
 
 
 
