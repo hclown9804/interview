@@ -284,15 +284,137 @@ class Solution {
 }
 ```
 
+### [155. 最小栈(easy)](https://leetcode-cn.com/problems/min-stack/)
 
+> ```
+> 输入：
+> ["MinStack","push","push","push","getMin","pop","top","getMin"]
+> [[],[-2],[0],[-3],[],[],[],[]]
+> 
+> 输出：
+> [null,null,null,null,-3,null,0,-2]
+> 
+> 解释：
+> MinStack minStack = new MinStack();
+> minStack.push(-2);
+> minStack.push(0);
+> minStack.push(-3);
+> minStack.getMin();   --> 返回 -3.
+> minStack.pop();
+> minStack.top();      --> 返回 0.
+> minStack.getMin();   --> 返回 -2.
+> ```
 
+#### 思路一：辅助栈
 
+使用一个辅助栈来保存最小值。
 
+```java
+class MinStack {
+    Stack<Integer> stk1, stk2;
+    /** initialize your data structure here. */
+    public MinStack() {
+        stk1 = new Stack<>();
+        stk2 = new Stack<>();
+        stk2.push(Integer.MAX_VALUE);
+    }
+    
+    public void push(int val) {
+        stk1.push(val);
+        stk2.push(Math.min(stk2.peek(), val));
+    }
+    
+    public void pop() {
+        stk1.pop();
+        stk2.pop();
+    }
+    
+    public int top() {
+        return stk1.peek();
+    }
+    
+    public int getMin() {
+        return stk2.peek();
+    }   
+}
+```
 
+#### 思路二：元组思想
 
+使用一个二元组来保存当前值和最小值。
 
+```java
+class MinStack {
+    Stack<int[]> stk = new Stack<>();
+    /** initialize your data structure here. */
+    public MinStack() {
 
+    }
+    
+    public void push(int val) {
+        if (stk.isEmpty()) stk.push(new int[]{val,val});
+        else stk.push(new int[]{val, Math.min(val, stk.peek()[1])});
+    }
+    
+    public void pop() {
+        stk.pop();
+    }
+    
+    public int top() {
+        return stk.peek()[0];
+    }
+    
+    public int getMin() {
+        return stk.peek()[1];
+    }
+}
+```
 
+#### 思路三：链表
+
+使用链表代替栈存储。
+
+```java
+class MinStack {
+    class Node {
+        int val, min;
+        Node next;
+        public Node(int val, int min) {
+            this.val = val;
+            this.min = min;
+            next = null;
+        }
+    }
+    Node head;
+    /** initialize your data structure here. */
+    public MinStack() {
+
+    }
+    
+    public void push(int val) {
+        if (head == null) head = new Node(val, val);
+        else {
+            Node cur = new Node(val, Math.min(val, head.min));
+            cur.next = head;
+            head = cur;
+        }
+    }
+    
+    public void pop() {
+        if (head != null) head = head.next;
+    }
+    
+    public int top() {
+        if (head != null) return head.val;
+        return -1;
+    }
+    
+    public int getMin() {
+        if (head != null) return head.min;
+        return -1;
+    }
+}
+```
 
 
 
