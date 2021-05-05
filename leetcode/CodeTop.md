@@ -191,9 +191,57 @@ class Solution {
 }
 ```
 
+### [110. 平衡二叉树](https://leetcode-cn.com/problems/balanced-binary-tree/)
 
+> ```
+> 输入：root = [3,9,20,null,null,15,7]
+> 输出：true
+> ```
+>
+> ![img](https://assets.leetcode.com/uploads/2020/10/06/balance_1.jpg)
 
+####  自顶向下递归
 
+计算每个节点左子树和右子树的高度，判断高度差是否超过1，同时递归判断左右子树是否为平衡树。
+
+时间复杂度：$O(NlogN)$，$isBalanced$ 遍历所有节点，占用 $O(N)$ ；$depth$ 遍历子树的所有节点，占用 $O(logN)$ 。
+
+```java
+class Solution {
+    public int depth(TreeNode root) {
+        if (root == null) return 0;
+        return Math.max(depth(root.left), depth(root.right)) + 1;
+    }
+
+    public boolean isBalanced(TreeNode root) {
+        if (root == null) return true;
+        return isBalanced(root.left) && isBalanced(root.right) && Math.abs(depth(root.left) - depth(root.right)) <= 1;
+    }
+}
+```
+
+#### 自底向上递归
+
+提前终止不符合的情况，直接返回。
+
+时间复杂度：$O(N)$
+
+```java
+class Solution {
+    public boolean isBalanced(TreeNode root) {
+        return dfs(root) != -1;
+    }
+
+    public int dfs(TreeNode root) {
+        if (root == null) return 0;
+        int left = dfs(root.left);
+        if (left == -1) return -1;
+        int right = dfs(root.right);
+        if (right == -1) return -1;
+        return Math.abs(left - right) < 2 ? Math.max(left, right) + 1 : -1; 
+    }
+}
+```
 
 
 
