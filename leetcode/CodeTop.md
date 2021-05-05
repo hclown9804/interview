@@ -154,21 +154,19 @@ class Solution {
 ```java
 class Solution {
     int P = 131, n, m;
-    long []ha, hb, p;
-
-    public int findLength(int[] A, int[] B) {
-        n = A.length;
-        m = B.length;
+    long[] ha, hb, p;
+    public int findLength(int[] nums1, int[] nums2) {
+        n = nums1.length;
+        m = nums2.length;
         ha = new long[n + 1];
         hb = new long[m + 1];
         p = new long[n + 1];
         p[0] = 1;
         for (int i = 1; i <= n; ++i) {
-            ha[i] = ha[i - 1] * P + A[i - 1];
+            ha[i] = ha[i - 1] * P + nums1[i - 1];
             p[i] = p[i - 1] * P;
         }
-        for (int i = 1; i <= m; ++i) hb[i] = hb[i - 1] * P + B[i - 1];
-
+        for (int i = 1; i <= m; ++i) hb[i] = hb[i - 1] * P + nums2[i - 1];
         int l = 0, r = n;
         while (l < r) {
             int mid = l + r + 1 >> 1;
@@ -178,17 +176,16 @@ class Solution {
         return l;
     }
 
-    boolean check(int mid) {
-        HashSet<Long> hash = new HashSet<>();
-        for (int i = mid; i <= n; ++i) hash.add(get(ha, i - mid + 1, i));
-
+    public boolean check(int mid) {
+        HashSet<Long> set = new HashSet<>();
+        for (int i = mid; i <= n; ++i) set.add(get(ha, i - mid + 1, i));
         for (int i = mid; i <= m; ++i) {
-            if (hash.contains(get(hb, i - mid + 1, i))) return true;
+            if (set.contains(get(hb, i - mid + 1, i))) return true;
         }
         return false;
     }
 
-    long get(long[] h, int l, int r) {
+    public long get(long[] h, int l, int r) {
         return h[r] - h[l - 1] * p[r - l + 1];
     }
 }
