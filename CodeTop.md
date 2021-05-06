@@ -475,7 +475,59 @@ class Solution {
 }
 ```
 
+### [105. 从前序与中序遍历序列构造二叉树(mid)](https://leetcode-cn.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/)
 
+> ```
+> 输入：
+>     前序遍历 preorder = [3,9,20,15,7]
+>     中序遍历 inorder = [9,3,15,20,7]
+> 输出：[3,9,20,null,null,15,7]
+> 
+>     3
+>    / \
+>   9  20
+>     /  \
+>    15   7
+> ```
+
+#### 思路：递归
+
+1.使用 $HashMap$ 存储 $inorder$ 中序遍历的节点值以及对应下标；
+
+2.递归重建二叉树：
+
+* $pl$ ：子树前序遍历的左端点，$pr$：子树前序遍历的右端点；
+* $il$ ：子树中序遍历的左端点，$ir$：子树中序遍历的右端点；
+
+* 获取当前子树的根节点，即 $preorder$ 前序遍历的第一个节点 $pl$ ;
+* 获取根节点对应中序遍历的下标 $k$；
+* 递归重建根节点的左右子树：
+  * 左子树：前序遍历：$[pl+1,pl+k-il]$；中序遍历：$[il,k-1]$
+  * 计算左子树的节点个数：$k-il-1$
+  * 右子树：前序遍历：$[pl+k-il+1,pr]$；中序遍历：$[k+1,ir]$
+
+* 返回根节点。
+
+时间复杂度：$O(N)$
+
+```java
+class Solution {
+    HashMap<Integer, Integer> map = new HashMap<>();
+    public TreeNode buildTree(int[] preorder, int[] inorder) {
+        for (int i = 0; i < inorder.length; ++i) map.put(inorder[i], i);
+        return build(preorder, 0, preorder.length - 1, inorder, 0, inorder.length - 1);
+    }
+
+    public TreeNode build(int[] preorder, int pl, int pr, int[] inorder, int il, int ir) {
+        if (pl > pr) return null;
+        TreeNode root = new TreeNode(preorder[pl]);
+        int k = map.get(preorder[pl]);
+        root.left = build(preorder, pl + 1, pl + k - il, inorder, il, k - 1);
+        root.right = build(preorder, pl + k - il + 1, pr, inorder, k + 1, ir);
+        return root;
+    }
+}
+```
 
 
 
