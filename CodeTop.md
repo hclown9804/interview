@@ -636,9 +636,80 @@ class Solution {
 }
 ```
 
+### [234. 回文链表(easy)](https://leetcode-cn.com/problems/palindrome-linked-list/)
 
+> ```
+> 输入: 1->2->2->1
+> 输出: true
+> ```
 
+#### 思路：反转链表
 
+虽然本题原难度是 $easy$ ，但是加上时空复杂度限制之和可以算一道 $mid$ 题了。
+
+1.首先找出链表的中点，从中点开始对后半部分进行反转；
+
+2.使用两个指针，一个从头开始，一个从尾开始，因为已经反转，两个指针同时遍历，一旦有一个值不相等，则不是回文链表。
+
+时间复杂度：$O(N)$
+
+空间复杂度：$O(1)$
+
+```java
+// 根据长度计算中点
+class Solution {
+    public boolean isPalindrome(ListNode head) {
+        int n = 0;
+        for (ListNode p = head; p != null; p = p.next) n++;
+        if (n == 1) return true;
+        ListNode a = head;
+        for (int i = 0; i < (n + 1) / 2; ++i) a = a.next;
+        ListNode b = a.next;
+        for (int i = 0; i < n / 2 - 1; ++i) {
+            ListNode c = b.next;
+            b.next = a;
+            a = b;
+            b = c;
+        }
+        ListNode p = head, q = a;
+        for (int i = 0; i < n / 2; ++i) {
+            if (p.val != q.val) return false;
+            p = p.next;
+            q = q.next;
+        }
+        return true;
+    }
+}
+
+// 快慢指针求中点
+class Solution {
+    public boolean isPalindrome(ListNode head) {
+        ListNode slow = head, fast = head;
+        while (fast != null && fast.next != null) {
+            fast = fast.next.next;
+            slow = slow.next;
+        }
+        ListNode p = head, q = reverseList(slow);
+        while (q != null) {
+            if (p.val != q.val) return false;
+            p = p.next;
+            q = q.next;
+        }
+        return true;
+    }   
+
+    public ListNode reverseList(ListNode head) {
+        ListNode prev = null, cur = head;
+        while (cur != null) {
+            ListNode next = cur.next;
+            cur.next = prev;
+            prev = cur;
+            cur = next;
+        }
+        return prev;
+    }
+}
+```
 
 
 
