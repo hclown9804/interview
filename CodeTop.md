@@ -416,13 +416,64 @@ class MinStack {
 }
 ```
 
+### [144. 二叉树的前序遍历(mid)](https://leetcode-cn.com/problems/binary-tree-preorder-traversal/)
 
+> ```
+> 输入：root = [1,null,2,3]
+> 输出：[1,2,3]
+> ```
+>
+> ![img](https://assets.leetcode.com/uploads/2020/09/15/inorder_1.jpg)
 
+#### 思路一：递归
 
+先访问根节点再递归遍历左右子树。
 
+时间复杂度：$O(N)$
 
+```java
+class Solution {
+    List<Integer> ans = new ArrayList<>();
 
+    public void dfs(TreeNode root) {
+        if (root == null) return;
+        ans.add(root.val);
+        dfs(root.left);
+        dfs(root.right);
+    }
 
+    public List<Integer> preorderTraversal(TreeNode root) {
+        if (root == null) return ans;
+        dfs(root);
+        return ans;
+    }
+}
+```
+
+#### 思路二：非递归
+
+维护一个栈来存储左子树节点。
+
+时间复杂度：$O(N)$
+
+```java
+class Solution {
+    public List<Integer> preorderTraversal(TreeNode root) {
+        List<Integer> ans = new ArrayList<>();
+        Stack<TreeNode> stk = new Stack<>();
+        while (!stk.isEmpty() || root != null) {
+            while (root != null) {
+                stk.push(root);
+                ans.add(root.val);
+                root = root.left;
+            }
+            root = stk.pop();
+            root = root.right;
+        }
+        return ans;
+    }
+}
+```
 
 
 
