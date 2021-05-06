@@ -529,6 +529,131 @@ class Solution {
 }
 ```
 
+### [113. 路径总和 II(mid)](https://leetcode-cn.com/problems/path-sum-ii/)
+
+> ```
+> 输入：root = [5,4,8,11,null,13,4,7,2,null,null,5,1], targetSum = 22
+> 输出：[[5,4,11,2],[5,8,4,5]]
+> ```
+>
+> ![img](https://assets.leetcode.com/uploads/2021/01/18/pathsumii1.jpg)
+
+#### 思路一：DFS
+
+1.对二叉树进行 $DFS$ ，计算每一个节点到叶节点的路径值；使用列表 $ans$ 存储所有解，列表$path$  记录当前解；
+
+2.在遍历到当前节点时，$targetSum$ 减去当前节点的值，若此时节点为叶节点且 $targetSum$ 刚好为 $0$ 时，将当前解 $path$ 添加到解集中；
+
+3.递归遍历左右子树；
+
+4.删去 $path$ 中的最后一个节点，即删除当前子树的根节点，回复现场。
+
+时间复杂度：$O(N^2)$
+
+```java
+class Solution {
+    List<List<Integer>> ans = new ArrayList<>();
+    List<Integer> path = new ArrayList<>();
+
+    public void dfs(TreeNode root, int targetSum) {
+        if (root == null) return;
+        targetSum -= root.val;
+        path.add(root.val);
+        if (targetSum == 0 && root.left == null && root.right == null)
+            ans.add(new ArrayList<>(path));
+        dfs(root.left, targetSum);
+        dfs(root.right, targetSum);
+        path.remove(path.size() - 1);
+    }
+
+    public List<List<Integer>> pathSum(TreeNode root, int targetSum) {
+        dfs(root, targetSum);
+        return ans;
+    }
+}
+```
+
+#### 思路二：BFS
+
+1.首先定义一个对象 $Node$，用来存储当前节点以及到当前节点的路径和（不含当前节点），使用一个 $HashMap$ 来存储当前节点以及它的父节点；
+
+2.对二叉树进行 $BFS$：
+
+* 队列存储 $Node$ 对象，根节点入队；
+
+* 当队列非空时，队列出队，计算当前节点路径和，如果当前节点为叶节点且路径和等于 $targetSum$，从当前节点根据 $HashMap$ 存储结果向上追溯从而找到路径，加入解集，由于是自底向上回溯，需要将解翻转；
+* 若当前节点不是叶节点，则将非空子节点加入 $HashMap$ 并且入队。
+
+时间复杂度：$O(N^2)$
+
+```java
+class Solution {       
+    class Node {
+        TreeNode node;
+        int val;
+        public Node(TreeNode node, int val) {
+            this.node = node;
+            this.val = val;
+        }
+    }
+    
+    List<List<Integer>> ans = new ArrayList<>();
+    HashMap<TreeNode, TreeNode> map = new HashMap<>();    
+    public List<List<Integer>> pathSum(TreeNode root, int targetSum) {
+        if (root == null) return ans;
+        Queue<Node> queue = new LinkedList<>();
+        queue.offer(new Node(root, 0));
+
+        while (!queue.isEmpty()) {
+            Node node = queue.poll();
+            TreeNode cur = node.node;
+            int t = node.val + cur.val;
+            if (cur.left == null && cur.right == null) {
+                if (t == targetSum) getPath(cur);
+            } else {
+                if (cur.left != null) {
+                    map.put(cur.left, cur);
+                    queue.offer(new Node(cur.left, t));
+                }
+                if (cur.right != null) {
+                    map.put(cur.right, cur);
+                    queue.offer(new Node(cur.right, t));
+                }
+            }
+        }
+        return ans;
+    }
+
+    public void getPath(TreeNode root) {
+        ArrayList<Integer> path = new ArrayList<>();
+        while (root != null) {
+            path.add(root.val);
+            root = map.get(root);
+        }
+        Collections.reverse(path);
+        ans.add(new ArrayList<Integer>(path));
+    }
+}
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
