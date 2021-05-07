@@ -22,6 +22,89 @@ class Solution {
 }
 ```
 
+### [215. 数组中的第K个最大元素(mid)](https://leetcode-cn.com/problems/kth-largest-element-in-an-array/)
+
+> ```
+> 输入: [3,2,1,5,6,4] 和 k = 2
+> 输出: 5
+> ```
+
+#### 思路一：快速排序
+
+* 使用快速排序的 $partition$ 过程，对于这样的一次过程，可以确定一个元素 $x$ 的最终位置，即它前面的每个元素都大于它，后面的每个元素都小于等于它。
+* 在每次划分数组之后，判断 $pivot$ 在划分后的位置；
+* 如果位置正好为 $k$ ，则直接返回 $pivot$ ；
+* 否则判断是应该在左边还是右边继续进行搜索。
+
+时间复杂度：$O(N)$
+
+```java
+class Solution {
+    public int findKthLargest(int[] nums, int k) {
+        return quick_select(nums, 0, nums.length - 1, k - 1);
+    }
+
+    public int quick_select(int[] nums, int l, int r, int k) {
+        if (l == r) return nums[k];
+        int x = nums[l + r >> 1], i = l - 1, j = r + 1;
+        while (i < j) {
+            do i++; while (nums[i] > x);
+            do j--; while (nums[j] < x);
+            if (i < j) swap(nums, i, j);
+        }
+        if (k <= j) return quick_select(nums, l, j, k);
+        else return quick_select(nums, j + 1, r, k);
+    }
+
+    public void swap(int[] nums, int i, int j) {
+        int t = nums[i];
+        nums[i] = nums[j];
+        nums[j] = t;
+    }
+}
+```
+
+### 思路二：堆排序
+
+建立大根堆，做 $k-1$ 次删除操作堆顶元素即为答案。
+
+时间复杂度：$O(NlogN)$
+
+```java
+class Solution {
+    public int findKthLargest(int[] nums, int k) {
+        int size = nums.length;
+        buildHeap(nums, size);
+        for (int i = nums.length - 1; i >= nums.length - k + 1; --i) {
+            swap(nums, 0, i);
+            size--;
+            heapify(nums, 0, size);
+        }
+        return nums[0];
+    }
+
+    public void buildHeap(int[] nums, int size) {
+        for (int i = size / 2; i >= 0; --i) heapify(nums, i, size);
+    }
+
+    public void heapify(int[] h, int u, int size) {
+        int l = u * 2 + 1, r = u * 2 + 2, t = u;
+        if (l < size && h[l] > h[t]) t = l;
+        if (r < size && h[r] > h[t]) t = r;
+        if (t != u) {
+            swap(h, u, t);
+            heapify(h, t, size);
+        }
+    }
+
+    public void swap(int[] nums, int i, int j) {
+        int t = nums[i];
+        nums[i] = nums[j];
+        nums[j] = t;
+    }
+}
+```
+
 ### [3. 无重复字符的最长子串(mid)](https://leetcode-cn.com/problems/longest-substring-without-repeating-characters/) 
 
 > ```
