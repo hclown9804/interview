@@ -64,7 +64,7 @@ class Solution {
 }
 ```
 
-### 思路二：堆排序
+#### 思路二：堆排序
 
 建立大根堆，做 $k-1$ 次删除操作堆顶元素即为答案。
 
@@ -73,27 +73,23 @@ class Solution {
 ```java
 class Solution {
     public int findKthLargest(int[] nums, int k) {
-        int size = nums.length;
-        buildHeap(nums, size);
+        int size = nums.length - 1;
+        for (int i = size / 2; i >= 0; --i) down(nums, i, nums.length);
         for (int i = nums.length - 1; i >= nums.length - k + 1; --i) {
             swap(nums, 0, i);
             size--;
-            heapify(nums, 0, size);
+            down(nums, 0, size);
         }
         return nums[0];
     }
 
-    public void buildHeap(int[] nums, int size) {
-        for (int i = size / 2; i >= 0; --i) heapify(nums, i, size);
-    }
-
-    public void heapify(int[] h, int u, int size) {
-        int l = u * 2 + 1, r = u * 2 + 2, t = u;
-        if (l < size && h[l] > h[t]) t = l;
-        if (r < size && h[r] > h[t]) t = r;
-        if (t != u) {
+    public void down(int[] h, int u, int size) {
+        int t = u;
+        if (u * 2 + 1 < size && h[u * 2 + 1] > h[t]) t = u * 2 + 1;
+        if (u * 2 + 2 < size && h[u * 2 + 2] > h[t]) t = u * 2 + 2;
+        if (u != t) {
             swap(h, u, t);
-            heapify(h, t, size);
+            down(h, t, size);
         }
     }
 
