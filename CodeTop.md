@@ -1,5 +1,27 @@
 # CodeTop
 
+### [206. 反转链表（easy)](https://leetcode-cn.com/problems/reverse-linked-list/)
+
+> ```
+> 输入：head = [1,2,3,4,5]
+> 输出：[5,4,3,2,1]
+> ```
+
+```java
+class Solution {
+    public ListNode reverseList(ListNode head) {
+        ListNode prev = null, cur = head;
+        while (cur != null) {
+            ListNode next = cur.next;
+            cur.next = prev;
+            prev = cur;
+            cur = next;
+        }
+        return prev;
+    }
+}
+```
+
 ### [3. 无重复字符的最长子串(mid)](https://leetcode-cn.com/problems/longest-substring-without-repeating-characters/) 
 
 > ```
