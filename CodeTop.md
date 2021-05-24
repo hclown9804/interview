@@ -148,6 +148,46 @@ class Solution {
 }
 ```
 
+### [25. K 个一组翻转链表(hard)](https://leetcode-cn.com/problems/reverse-nodes-in-k-group/)
+
+> ```
+> 输入：head = [1,2,3,4,5], k = 3
+> 输出：[3,2,1,4,5]
+> ```
+>
+> ![img](https://assets.leetcode.com/uploads/2020/10/03/reverse_ex2.jpg)
+
+#### 代码
+
+```java
+class Solution {
+    public ListNode reverseKGroup(ListNode head, int k) {
+        ListNode dummy = new ListNode(-1);
+        dummy.next = head;
+        ListNode p = dummy;
+        while (p != null) {
+            ListNode q = p;
+            for (int i = 0; i < k && q != null; ++i) q = q.next;
+            if (q == null) break;
+            ListNode a = p.next, b = a.next;
+            for (int i = 0; i < k - 1; ++i) {
+                ListNode c = b.next;
+                b.next = a;
+                a = b;
+                b = c;
+            }
+            ListNode t = p.next;
+            p.next = a;
+            t.next = b;
+            p = t;
+        }
+        return dummy.next;
+    }
+}
+```
+
+
+
 ### [718. 最长重复子数组(mid)](https://leetcode-cn.com/problems/maximum-length-of-repeated-subarray/)
 
 > ```
