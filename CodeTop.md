@@ -949,11 +949,38 @@ class LRUCache {
  */
 ```
 
+### [42. 接雨水(hard)](https://leetcode-cn.com/problems/trapping-rain-water/)
 
+> ```
+> 输入：height = [0,1,0,2,1,0,1,3,2,1,2,1]
+> 输出：6
+> 解释：上面是由数组 [0,1,0,2,1,0,1,3,2,1,2,1] 表示的高度图，在这种情况下，可以接 6 个单位的雨水（蓝色部分表示雨水）。 
+> ```
+>
+> ![](https://i.loli.net/2021/05/31/zCR8uild3KrZIJG.png)
 
+#### 思路：单调栈
 
+* 记录每个位置左边和右边第一个比自身不低的矩形条，对三个矩形条围成的 $U$ 型按照行进行分解计算面积；
+* 维护一个单调递减的单调栈，每次元素出栈时，$i$ 为右边第一个比 $stk.peek()$ 不低的矩形，$stk.pop()$ 弹出栈顶，并记录为 $top$，假设此时栈中仍有元素，此时新的栈顶 $stk.peek()$ 、$top$、$i$ 构成一个 $U$ 型，其中 $top$ 代表底部，计算宽度为 $i - stk.peek() - 1$ ，高度为左右矩形较低值与 $top$ 的差值即为 $Math.min(height[stk.peek()], height[i]) - height[top]$。
 
-
+```java
+class Solution {
+    public int trap(int[] height) {
+        int n = height.length, ans = 0;
+        Deque<Integer> stk = new LinkedList<>();
+        for (int i = 0; i < n; ++i) {
+            while (!stk.isEmpty() && height[stk.peek()] <= height[i]) {
+                int top = stk.pop();
+                if (stk.isEmpty()) break;
+                ans += (i - stk.peek() - 1) * (Math.min(height[stk.peek()], height[i]) - height[top]);
+            }
+            stk.push(i);
+        }
+        return ans;
+    }
+}
+```
 
 
 
