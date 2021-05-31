@@ -964,6 +964,10 @@ class LRUCache {
 * 记录每个位置左边和右边第一个比自身不低的矩形条，对三个矩形条围成的 $U$ 型按照行进行分解计算面积；
 * 维护一个单调递减的单调栈，每次元素出栈时，$i$ 为右边第一个比 $stk.peek()$ 不低的矩形，$stk.pop()$ 弹出栈顶，并记录为 $top$，假设此时栈中仍有元素，此时新的栈顶 $stk.peek()$ 、$top$、$i$ 构成一个 $U$ 型，其中 $top$ 代表底部，计算宽度为 $i - stk.peek() - 1$ ，高度为左右矩形较低值与 $top$ 的差值即为 $Math.min(height[stk.peek()], height[i]) - height[top]$。
 
+时间复杂度：$O(N)$
+
+空间复杂度：$O(N)$
+
 ```java
 class Solution {
     public int trap(int[] height) {
@@ -982,7 +986,48 @@ class Solution {
 }
 ```
 
+### [33. 搜索旋转排序数组(mid)](https://leetcode-cn.com/problems/search-in-rotated-sorted-array/)
 
+> ```
+> 输入：nums = [4,5,6,7,0,1,2], target = 0
+> 输出：4
+> ```
+
+#### 思路：二分
+
+* 第一次二分找到大于等于 $nums[0]$ 的右边界；
+* 若 $nums[0]$ 小于等于 $target$  ，则 $target$ 在左边，否则更新边界；
+* 第二次二分找到大于等于 $target$ 的左边界，若二分的边界值不等于 $target$，则查找失败。
+
+时间复杂度：$O(logN)$
+
+空间复杂度：$O(1)$
+
+```java
+class Solution {
+    public int search(int[] nums, int target) {
+        int n = nums.length;
+        int l = 0, r = n - 1;
+        while (l < r) {
+            int mid = l + r + 1 >> 1;
+            if (nums[mid] >= nums[0]) l = mid;
+            else r = mid - 1;
+        } 
+        if (nums[0] <= target) l = 0;
+        else {
+            l = r + 1;
+            r = n - 1;
+        }
+        while (l < r) {
+            int mid = l + r >> 1;
+            if (nums[mid] >= target) r = mid;
+            else l = mid + 1;
+        }
+        if (nums[r] == target) return r;
+        return -1;
+    }
+}
+```
 
 
 
