@@ -852,7 +852,102 @@ class Solution {
 }
 ```
 
+### [146. LRU 缓存机制(mid)](https://leetcode-cn.com/problems/lru-cache/)
 
+> ```
+> 输入
+> ["LRUCache", "put", "put", "get", "put", "get", "put", "get", "get", "get"]
+> [[2], [1, 1], [2, 2], [1], [3, 3], [2], [4, 4], [1], [3], [4]]
+> 输出
+> [null, null, null, 1, null, -1, null, -1, 3, 4]
+> 
+> 解释
+> LRUCache lRUCache = new LRUCache(2);
+> lRUCache.put(1, 1); // 缓存是 {1=1}
+> lRUCache.put(2, 2); // 缓存是 {1=1, 2=2}
+> lRUCache.get(1);    // 返回 1
+> lRUCache.put(3, 3); // 该操作会使得关键字 2 作废，缓存是 {1=1, 3=3}
+> lRUCache.get(2);    // 返回 -1 (未找到)
+> lRUCache.put(4, 4); // 该操作会使得关键字 1 作废，缓存是 {4=4, 3=3}
+> lRUCache.get(1);    // 返回 -1 (未找到)
+> lRUCache.get(3);    // 返回 3
+> lRUCache.get(4);    // 返回 4
+> ```
+
+#### 思路：哈希表+双向链表
+
+* 使用哈希表+双向链表维护所有在缓存中的数据；
+* 按顺序存储数据，头部为最近使用的，尾部为最久未使用的。
+
+```java
+class LRUCache {
+    class Node {
+        int key, value;
+        Node left, right;
+        public Node(int key, int value) {
+            this.key = key;
+            this.value = value;
+        }
+    }
+
+    HashMap<Integer, Node> map = new HashMap<>();
+    Node L, R;
+    int n;
+
+    public LRUCache(int capacity) {
+        n = capacity;
+        L = new Node(-1, -1);
+        R = new Node(-1, -1);
+        L.right = R;
+        R.left = L;
+    }
+    
+    public int get(int key) {
+        if (!map.containsKey(key)) return -1;
+        Node p = map.get(key);
+        remove(p);
+        insert(p);
+        return p.value;
+    }
+    
+    public void put(int key, int value) {
+        if (map.containsKey(key)) {
+            Node p = map.get(key);
+            p.value = value;
+            remove(p);
+            insert(p);
+        } else {
+            if (n == map.size()) {
+                Node p = R.left;
+                remove(p);
+                map.remove(p.key);
+            }
+            Node p = new Node(key, value);
+            insert(p);
+            map.put(key, p);
+        }
+    }
+
+    public void remove(Node p) {
+        p.left.right = p.right;
+        p.right.left = p.left;
+    }
+
+    public void insert(Node p) {
+        p.left = L;
+        p.right = L.right;
+        L.right.left = p;
+        L.right = p;
+    }
+}
+
+/**
+ * Your LRUCache object will be instantiated and called as such:
+ * LRUCache obj = new LRUCache(capacity);
+ * int param_1 = obj.get(key);
+ * obj.put(key,value);
+ */
+```
 
 
 
