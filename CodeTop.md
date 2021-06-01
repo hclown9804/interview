@@ -1098,6 +1098,10 @@ class Solution {
 
 使用归并排序思路进行排序
 
+时间复杂度：$O(kN*logk)$
+
+空间复杂度：$O(logk)$
+
 ```java
 class Solution {
     public ListNode mergeKLists(ListNode[] lists) {
@@ -1147,6 +1151,10 @@ class Solution {
 
 #### 思路：层序遍历
 
+时间复杂度：$O(N)$
+
+空间复杂度：$O(N)$
+
 ```java
 class Solution {
     public List<Integer> rightSideView(TreeNode root) {
@@ -1167,6 +1175,51 @@ class Solution {
     }
 }
 ```
+
+### [54. 螺旋矩阵(mid)](https://leetcode-cn.com/problems/spiral-matrix/)
+
+> ```
+> 输入：matrix = [[1,2,3],[4,5,6],[7,8,9]]
+> 输出：[1,2,3,6,9,8,7,4,5]
+> ```
+>
+> ![](https://i.loli.net/2021/06/01/uDhyxcPrlNnwVS8.png)
+
+#### 思路
+
+* 使用方向数组控制当元素遍历到边界时的情况；
+* 使用 $boolean$ 数组记录当前数字是否遍历过；
+
+时间复杂度：$O(NM)$
+
+空间复杂度：$O(NM)$
+
+```java
+class Solution {
+    public List<Integer> spiralOrder(int[][] matrix) {
+        List<Integer> ans = new ArrayList<>();
+        int n = matrix.length;
+        if (n == 0) return ans;
+        int m = matrix[0].length;
+        int dx[] = {0, 1, 0, -1}, dy[] = {1, 0, -1, 0};
+        boolean[][] st = new boolean[n][m];
+        for (int i = 0, d = 0, x = 0, y = 0; i < n * m; ++i) {
+            st[x][y] = true;
+            ans.add(matrix[x][y]);
+            int a = x + dx[d], b = y + dy[d];
+            if (a < 0 || a >= n || b < 0 || b >= m || st[a][b]) {
+                d = (d + 1) % 4;
+                a = x + dx[d];
+                b = y + dy[d];
+            }
+            x = a; y = b;
+        }
+        return ans;
+    }
+}
+```
+
+
 
 
 
