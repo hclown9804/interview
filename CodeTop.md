@@ -1381,11 +1381,92 @@ class Solution {
 }
 ```
 
+### [200. 岛屿数量(mid)](https://leetcode-cn.com/problems/number-of-islands/)
 
+> ```
+> 输入：grid = [
+>   ["1","1","1","1","0"],
+>   ["1","1","0","1","0"],
+>   ["1","1","0","0","0"],
+>   ["0","0","0","0","0"]
+> ]
+> 输出：1
+> ```
 
+#### 思路1：DFS
 
+时间复杂度：$O(N*M)$
 
+空间复杂度：$O(N*M)$
 
+```java
+class Solution {
+    int[] dx = {-1, 0, 1, 0}, dy = {0, 1, 0, -1};
+    public void dfs(char[][] grid, int x, int y) {
+        grid[x][y] = '#';
+        for (int i = 0; i < 4; ++i) {
+            int a = x + dx[i], b = y + dy[i];
+            if (a < 0 || a >= grid.length || b < 0 || b >= grid[0].length || grid[a][b] != '1') continue;
+            dfs(grid, a, b);
+        }
+    }
+
+    public int numIslands(char[][] grid) {
+        int n = grid.length;
+        if (n == 0) return 0;
+        int m = grid[0].length;
+        int ans = 0;
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < m; ++j) {
+                if (grid[i][j] == '1') {
+                    ans++;
+                    dfs(grid, i, j);
+                }
+            }
+        }
+        return ans;
+    }
+}
+```
+
+#### 思路2：BFS
+
+时间复杂度：$O(N*M)$
+
+空间复杂度：$O(min(N, M))$
+
+```java
+class Solution {
+    public int numIslands(char[][] grid) {
+        int n = grid.length;
+        if (n == 0) return 0;
+        int m = grid[0].length;
+        int ans = 0;
+        int[] dx = {-1, 0, 1, 0}, dy = {0, 1, 0, -1};
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < m; ++j) {
+                if (grid[i][j] == '1') {
+                    ++ans;
+                    grid[i][j] = '#';
+                    Queue<int[]> queue = new LinkedList<>();
+                    queue.offer(new int[]{i, j});
+                    while (!queue.isEmpty()) {
+                        int[] t = queue.poll();
+                        int x = t[0], y = t[1];
+                        for (int k = 0; k < 4; ++k) {
+                            int a = x + dx[k], b = y + dy[k];
+                            if (a < 0 || a >= n || b < 0 || b >= m || grid[a][b] != '1') continue;
+                            grid[a][b] = '#';
+                            queue.offer(new int[]{a, b});
+                        }
+                    }
+                }
+            }
+        }
+        return ans;
+    }
+}
+```
 
 
 
