@@ -1343,6 +1343,44 @@ class Solution {
 }
 ```
 
+### [124. 二叉树中的最大路径和(hard)](https://leetcode-cn.com/problems/binary-tree-maximum-path-sum/)
+
+> ```
+> 输入：root = [1,2,3]
+> 输出：6
+> 解释：最优路径是 2 -> 1 -> 3 ，路径和为 2 + 1 + 3 = 6
+> ```
+
+#### 思路：搜索
+
+* 记录全局变量 $ans$；
+* 分别递归计算左右子树大于0的值；
+* 累加左右节点值与根节点值更新 $ans$；
+
+时间复杂度：$O(N)$
+
+空间复杂度：$O(N)$
+
+```java
+class Solution {
+    int ans = Integer.MIN_VALUE;
+    public int maxPathSum(TreeNode root) {
+        if (root == null) return 0;
+        dfs(root);
+        return ans;
+    }
+
+    public int dfs(TreeNode root) {
+        if (root == null) return 0;
+        int left = 0, right = 0;
+        if (root.left != null) left = Math.max(left, dfs(root.left));
+        if (root.right != null) right = Math.max(right, dfs(root.right));
+        ans = Math.max(ans, left + right + root.val);
+        return Math.max(left, right) + root.val;
+    }
+}
+```
+
 
 
 
