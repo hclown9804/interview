@@ -1131,7 +1131,42 @@ class Solution {
 }
 ```
 
+### [199. 二叉树的右视图(mid)](https://leetcode-cn.com/problems/binary-tree-right-side-view/)
 
+> ```
+> 输入: [1,2,3,null,5,null,4]
+> 输出: [1, 3, 4]
+> 解释:
+> 
+>    1            <---
+>  /   \
+> 2     3         <---
+>  \     \
+>   5     4       <---
+> ```
+
+#### 思路：层序遍历
+
+```java
+class Solution {
+    public List<Integer> rightSideView(TreeNode root) {
+        List<Integer> ans = new ArrayList<>();
+        if (root == null) return ans;
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(root);
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            while (size-- > 0) {
+                TreeNode t = queue.poll();
+                if (t.left != null) queue.offer(t.left);
+                if (t.right != null) queue.offer(t.right);
+                if (size == 0) ans.add(t.val);
+            }
+        }
+        return ans;
+    }
+}
+```
 
 
 
