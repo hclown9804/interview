@@ -1079,7 +1079,57 @@ class Solution {
 }
 ```
 
+### [23. 合并K个升序链表(hard)](https://leetcode-cn.com/problems/merge-k-sorted-lists/)
 
+> ```
+> 输入：lists = [[1,4,5],[1,3,4],[2,6]]
+> 输出：[1,1,2,3,4,4,5,6]
+> 解释：链表数组如下：
+> [
+>   1->4->5,
+>   1->3->4,
+>   2->6
+> ]
+> 将它们合并到一个有序链表中得到。
+> 1->1->2->3->4->4->5->6
+> ```
+
+####  思路：归并
+
+使用归并排序思路进行排序
+
+```java
+class Solution {
+    public ListNode mergeKLists(ListNode[] lists) {
+        return merge(lists, 0, lists.length - 1);
+    }
+
+    public ListNode merge(ListNode[] lists, int l, int r) {
+        if (l == r) return lists[l];
+        if (l > r) return null;
+        int mid = l + r >> 1;
+        return mergeTwoList(merge(lists, l, mid), merge(lists, mid + 1 , r));
+    }
+
+    public ListNode mergeTwoList(ListNode l1, ListNode l2) {
+        if (l1 == null || l2 == null) return l1 == null ? l2 : l1;
+        ListNode dummy = new ListNode(-1), cur = dummy;
+        while (l1 != null && l2 != null) {
+            if (l1.val <= l2.val) {
+                cur.next = l1;               
+                l1 = l1.next;
+            } else {
+                cur.next = l2;
+                l2 = l2.next;
+            }
+            cur = cur.next;
+        }
+        if (l1 == null) cur.next = l2;
+        if (l2 == null) cur.next = l1;
+        return dummy.next;
+    }
+}
+```
 
 
 
