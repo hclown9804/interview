@@ -1219,7 +1219,63 @@ class Solution {
 }
 ```
 
+### [143. 重排链表(mid)](https://leetcode-cn.com/problems/reorder-list/)
 
+> ```
+> 给定链表 1->2->3->4->5, 重新排列为 1->5->2->4->3.
+> ```
 
+#### 思路
 
+* 找出链表的中间节点，断开中间节点，从中间节点开始翻转链表；
+* 两个指针，一个从链表头开始，一个从链表尾开始，遍历直到中间节点，依次连接；
+
+时间复杂度：$O(N)$
+
+空间复杂度：$O(1)$
+
+```java
+class Solution {
+    public void reorderList(ListNode head) {
+        if (head == null) return;
+        ListNode mid = getMid(head); 
+        ListNode p = head, q = mid.next;
+        mid.next = null;
+        q = reverseList(q);
+        merge(p, q);
+    }
+
+    public ListNode getMid(ListNode head) {
+        ListNode s = head, f = head.next;
+        while (f != null && f.next != null) {
+            s = s.next;
+            f = f.next.next;
+        }
+        return s;
+    }
+
+    public ListNode reverseList(ListNode head) {
+        ListNode cur = head, prev = null;
+        while (cur != null) {
+            ListNode next = cur.next;
+            cur.next = prev;
+            prev = cur;
+            cur = next;
+        }
+        return prev;
+    }
+
+    public void merge(ListNode l1, ListNode l2) {
+        ListNode cur1, cur2;
+        while (l1 != null && l2 != null) {
+            cur1 = l1.next;
+            cur2 = l2.next;
+            l1.next = l2;
+            l1 = cur1;
+            l2.next = l1;
+            l2 = cur2;
+        }
+    }
+}
+```
 
