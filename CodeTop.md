@@ -1029,11 +1029,55 @@ class Solution {
 }
 ```
 
+### [31. 下一个排列(mid)](https://leetcode-cn.com/problems/next-permutation/)
 
+> ```
+> 输入：nums = [1,2,3]
+> 输出：[1,3,2]
+> 
+> 输入：nums = [3,2,1]
+> 输出：[1,2,3]
+> ```
 
+#### 思路
 
+* 从后往前寻找第一个相邻升序的元素对 $(i, j)$，满足 $nums[i] < nums[j]$，则 $j$ 后面元素为降序排列；
+* 在 $j$ 后面从后往前寻找第一个满足 $nums[i] < nums[k]$ 的元素；
+* 交换 $nums[i]$ 和$nums[k]$；
+* 将 $j$ 后面所有元素逆序，即转换为升序排列。
 
+时间复杂度：$O(N)$
 
+空间复杂度：$O(1)$
+
+```java
+class Solution {
+    public void nextPermutation(int[] nums) {
+        int n = nums.length;
+        if (n <= 1) return;
+        int i = n - 2, j = n - 1, k = n - 1;
+        while (i >= 0 && nums[i] >= nums[j]) {
+            i--;
+            j--;
+        }
+        if (i >= 0) {
+            while (nums[i] >= nums[k]) k--;
+            swap(nums, i, k);
+        }
+        reverse(nums, j, n - 1);
+    }
+        
+    private void reverse(int[] nums, int i, int j){
+        while(i < j) swap(nums, i++, j--);
+    }
+
+    public void swap(int[] nums, int i, int j) {
+        int t = nums[i];
+        nums[i] = nums[j];
+        nums[j] = t;
+    }
+}
+```
 
 
 
