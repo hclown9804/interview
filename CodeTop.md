@@ -1279,3 +1279,48 @@ class Solution {
 }
 ```
 
+### [300. 最长递增子序列(mid)](https://leetcode-cn.com/problems/longest-increasing-subsequence/)
+
+> ```
+> 输入：nums = [10,9,2,5,3,7,101,18]
+> 输出：4
+> 解释：最长递增子序列是 [2,3,7,101]，因此长度为 4 。
+> ```
+
+#### 思路：DP
+
+时间复杂度：$O(N^2)$
+
+空间复杂度：$O(N)$
+
+```java
+class Solution {
+    public int lengthOfLIS(int[] nums) {
+        int n = nums.length, ans = 1;
+        if (n == 0) return 0;
+        int[] f = new int[n];
+        f[0] = 1;
+        for (int i = 1; i < n; ++i) {
+            f[i] = 1;
+            for (int j = 0; j < i; ++j) {
+                if (nums[j] < nums[i]) f[i] = Math.max(f[i], f[j] + 1);
+            }
+            ans = Math.max(ans, f[i]);
+        }
+        return ans;
+    }
+}
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
