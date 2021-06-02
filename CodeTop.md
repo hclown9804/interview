@@ -1737,6 +1737,26 @@ class Solution {
 }
 ```
 
+### [470. 用 Rand7() 实现 Rand10()(mid)](https://leetcode-cn.com/problems/implement-rand10-using-rand7/)
+
+#### 思路
+
+* 最少调用两次 $rand7()$， 则生成 $1-49$ 的数；
+* 若生成的数字大于40则直接拒绝；
+* 将 $1-40$ 的数字减去1，为 $0-39$，将其对10取模，则得到10组数，每组四个数。
+
+期望：$1/40/49*2=49/20=2.45$
+
+```java
+class Solution extends SolBase {
+    public int rand10() {
+        int t = (rand7() - 1) * 7 + rand7();
+        if (t > 40) return rand10();
+        return (t - 1) % 10 + 1;
+    }
+}
+```
+
 
 
 
