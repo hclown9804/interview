@@ -1468,6 +1468,120 @@ class Solution {
 }
 ```
 
+### 排序奇升偶降链表
+
+> ```
+> 给定链表 1->8->3->6->5->4->7->2, 重新排列为 1->2->3->4->5->6->7->8.
+> 奇数位置按序增长，偶数位置按序递减，如何能实现链表从小到大？
+> ```
+
+#### 思路
+
+* 分离奇数位置和偶数位置的两个链表；
+* 对偶数位置链表进行反转；
+* 合并两边链表为有序链表。
+
+时间复杂度：$O(N)$
+
+空间复杂度：$O(1)$
+
+```java
+public class Main {
+    static class ListNode {
+        int val;
+        ListNode next;
+        ListNode() {}
+        ListNode(int val) {
+            this.val = val;
+        }
+        ListNode(int val, ListNode next) {
+            this.val = val;
+            this.next = next;
+        }
+    }
+
+    public static void main(String[] args) {
+        ListNode head = new ListNode(1);
+        ListNode p = head;
+
+        int[] nums = new int[]{8, 3, 6, 5, 4, 7, 2};
+        for (int i = 0; i < nums.length; ++i) {
+            p.next = new ListNode(nums[i]);
+            p = p.next;
+        }
+        print(head);
+
+        ListNode[] ps = partition(head);
+        ListNode p1 = ps[0], p2 = ps[1];
+        p2 = reverse(p2);
+
+        print(p1);
+        print(p2);
+
+        ListNode ans = merge(p1, p2);
+        print(ans);
+    }
+
+    public static void print(ListNode p) {
+        while (p.next != null) {
+            System.out.print(p.val + "->");
+            p = p.next;
+        }
+        System.out.print(p.val);
+        System.out.println();
+    }
+
+    public static ListNode[] partition(ListNode head) {
+        ListNode p2 = head.next;
+        ListNode cur1 = head, cur2 = p2;
+        while (cur2 != null && cur2.next != null) {
+            cur1.next = cur2.next;
+            cur1 = cur1.next;
+            cur2.next = cur1.next;
+            cur2 = cur2.next;
+        }
+        cur1.next = null;
+        return new ListNode[]{head, p2};
+    }
+
+    public static ListNode reverse(ListNode head) {
+        ListNode prev = null, cur = head;
+        while (cur != null) {
+            ListNode next = cur.next;
+            cur.next = prev;
+            prev = cur;
+            cur = next;
+        }
+        return prev;
+    }
+
+    public static ListNode merge(ListNode p1, ListNode p2) {
+        if (p1 == null || p2 == null) return p1 == null ? p2 : p1;
+        ListNode dummy = new ListNode(-1);
+        ListNode p = dummy;
+        while (p1 != null && p2 != null) {
+            if (p1.val <= p2.val) {
+                p.next = p1;
+                p1 = p1.next;
+            } else {
+                p.next = p2;
+                p2 = p2.next;
+            }
+            p = p.next;
+        }
+        if (p1 == null) p.next = p2;
+        if (p2 == null) p.next = p1;
+        return dummy.next;
+    }
+}
+```
+
+
+
+
+
+
+
 
 
 
