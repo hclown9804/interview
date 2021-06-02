@@ -1665,3 +1665,38 @@ class Solution {
 }
 ```
 
+### [56. 合并区间(mid)](https://leetcode-cn.com/problems/merge-intervals/)
+
+> ```
+> 输入：intervals = [[1,3],[2,6],[8,10],[15,18]]
+> 输出：[[1,6],[8,10],[15,18]]
+> 解释：区间 [1,3] 和 [2,6] 重叠, 将它们合并为 [1,6].
+> ```
+
+#### 思路：排序
+
+* 对数组中的元素按照左端点排序；
+* 将数组中的集合入队，如果当前集合元素的左端点小于等于队列尾集合的右端点值，则更新队列尾集合的右端点，否则将当前集合入队。
+
+时间复杂度：$O(NlogN)$
+
+空间复杂度：$O(logN)$
+
+```java
+class Solution {
+    public int[][] merge(int[][] intervals) {
+        Arrays.sort(intervals, (a, b)->(a[0] - b[0]));
+        Deque<int[]> q = new LinkedList<>();
+        for (int[] interval: intervals) {
+            if (!q.isEmpty() && q.peekLast()[1] >= interval[0]) q.peekLast()[1] = Math.max(q.peekLast()[1], interval[1]);
+            else q.addLast(interval);
+        }
+        return q.toArray(new int[q.size()][2]);
+    }
+}
+```
+
+
+
+
+
