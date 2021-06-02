@@ -1686,15 +1686,58 @@ class Solution {
 class Solution {
     public int[][] merge(int[][] intervals) {
         Arrays.sort(intervals, (a, b)->(a[0] - b[0]));
-        Deque<int[]> q = new LinkedList<>();
+        Deque<int[]> queue = new LinkedList<>();
         for (int[] interval: intervals) {
-            if (!q.isEmpty() && q.peekLast()[1] >= interval[0]) q.peekLast()[1] = Math.max(q.peekLast()[1], interval[1]);
-            else q.addLast(interval);
+            if (!queue.isEmpty() && interval[0] <= queue.peekLast()[1]) queue.peekLast()[1] = Math.max(queue.peekLast()[1], interval[1]);
+            else queue.addLast(interval);
         }
-        return q.toArray(new int[q.size()][2]);
+        return queue.toArray(new int[queue.size()][2]);
     }
 }
 ```
+
+### [39. 组合总和(mid)](https://leetcode-cn.com/problems/combination-sum/)
+
+> ```
+> 输入：candidates = [2,3,5], target = 8,
+> 所求解集为：
+> [
+>   [2,2,2,2],
+>   [2,3,3],
+>   [3,5]
+> ]
+> ```
+
+#### 思路：搜索
+
+* 枚举每个数，每次 $target$ 减去当前数，若为 $0$ 则找到一组解，若枚举到最后一个数也没有退出则无解，枚举当前数还可以使用几次，继续搜索，最后恢复现场。
+
+```java
+class Solution {
+    List<List<Integer>> ans = new ArrayList<>();
+    List<Integer> path = new ArrayList<>();
+
+    public void dfs(int[] nums, int target, int u) {
+        if (target == 0) {
+            ans.add(new ArrayList<>(path));
+            return;
+        }
+        if (u == nums.length) return;
+        for (int i = 0; i * nums[u] <= target; ++i) {
+            dfs(nums, target - i * nums[u], u + 1);
+            path.add(nums[u]);
+        }
+        for (int i = 0; i * nums[u] <= target; ++i) path.remove(path.size() - 1);
+    }
+
+    public List<List<Integer>> combinationSum(int[] candidates, int target) {
+        dfs(candidates, target, 0);
+        return ans;
+    }
+}
+```
+
+
 
 
 
