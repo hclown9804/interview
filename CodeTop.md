@@ -1576,9 +1576,50 @@ public class Main {
 }
 ```
 
+### [41. 缺失的第一个正数(hard)](https://leetcode-cn.com/problems/first-missing-positive/)
 
+> ```
+> 输入：nums = [1,2,0]
+> 输出：3
+> 
+> 输入：nums = [3,4,-1,1]
+> 输出：2
+> 
+> 输入：nums = [7,8,9,11,12]
+> 输出：1
+> ```
 
+#### 思路
 
+* 如果数组不缺失数字的话，按照从小到大则应该是  $1$ 到 $n$ 放在数组中；
+* 遍历数组，将数字放到自己对应的位置，$1$ 放到下标为 $0$ 的地方，依此类推；
+* 如果数字已经放在对应位置则跳出循环。
+
+时间复杂度：$O(N)$
+
+空间复杂度：$O(1)$
+
+```java
+class Solution {
+    public int firstMissingPositive(int[] nums) {
+        int n = nums.length;
+        for (int i = 0; i < n; ++i) {
+            while (nums[i] > 0 && nums[i] <= n && nums[nums[i] - 1] != nums[i]) swap(nums, nums[i] - 1, i);
+        }
+        for (int i = 0; i < n; ++i) System.out.println(nums[i]);
+        for (int i = 0; i < n; ++i) {
+            if (nums[i] != i + 1) return i + 1;
+        }
+        return n + 1;
+    }
+
+    public void swap(int[] nums, int i, int j) {
+        int t = nums[i];
+        nums[i] = nums[j];
+        nums[j] = t;
+    }
+}
+```
 
 
 
