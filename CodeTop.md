@@ -1621,9 +1621,47 @@ class Solution {
 }
 ```
 
+### [46. 全排列(mid)](https://leetcode-cn.com/problems/permutations/)
 
+> ```
+> 输入：nums = [1,2,3]
+> 输出：[[1,2,3],[1,3,2],[2,1,3],[2,3,1],[3,1,2],[3,2,1]]
+> ```
 
+#### 思路：回溯
 
+时间复杂度：$O(N*N!)$
 
+空间复杂度：$O(N)$
 
+```java
+class Solution {
+    List<List<Integer>> ans = new ArrayList<>();
+    List<Integer> path = new ArrayList<>();
+    boolean[] st;
+
+    public void dfs(int[] nums, int u) {
+        int n = nums.length;
+        if (u == n) {
+            ans.add(new ArrayList<>(path));
+            return;
+        }
+        for (int i = 0; i < n; ++i) {
+            if (!st[i]) {
+                path.add(nums[i]);
+                st[i] = true;
+                dfs(nums, u + 1);
+                st[i] = false;
+                path.remove(path.size() - 1);
+            }
+        }
+    }
+
+    public List<List<Integer>> permute(int[] nums) {
+        st = new boolean[nums.length];
+        dfs(nums, 0);
+        return ans;
+    }
+}
+```
 
