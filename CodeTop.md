@@ -1866,7 +1866,7 @@ class Solution {
 #### 思路：DP
 
 * $f[i][j]$：表示从原点走 $i$ 步到 $j$ 的方案数；
-* $f[i][j]=f[i-1][(j-1+length)\%length]+f[i-1][(j+1+length)\%length]$
+* $f[i][j]=f[i-1][(j-1+length)\%length]+f[i-1][(j+1)\%length]$
 
 ```java
 public static int dp(int n) {
@@ -1875,7 +1875,7 @@ public static int dp(int n) {
     f[0][0] = 1;
     for (int i = 1; i <= n; ++i) {
         for (int j = 0; j < length; ++j) {
-            f[i][j] = f[i - 1][(j - 1 + length) % length] + f[i - 1][(j + 1 + length) % length];
+            f[i][j] = f[i - 1][(j - 1 + length) % length] + f[i - 1][(j + 1) % length];
         }
     }
     return f[n][0];
