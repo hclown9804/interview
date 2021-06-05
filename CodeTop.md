@@ -1797,9 +1797,44 @@ class Solution {
 }
 ```
 
+### [98. 验证二叉搜索树(mid)](https://leetcode-cn.com/problems/validate-binary-search-tree/)
 
+> ```
+> 输入:
+>     5
+>    / \
+>   1   4
+>      / \
+>     3   6
+> 输出: false
+> 解释: 输入为: [5,1,4,null,null,3,6]。
+>      根节点的值为 5 ，但是其右子节点值为 4 。
+> ```
 
+### 思路：中序遍历
 
+* 二叉搜索树的中序遍历是升序的。
+
+```java
+class Solution {
+    public boolean isValidBST(TreeNode root) {
+        if (root == null) return true;
+        Deque<TreeNode> stack = new LinkedList<>();
+        long prev = Long.MIN_VALUE;
+        while (!stack.isEmpty() || root != null) {
+            while (root != null) {
+                stack.push(root);
+                root = root.left;
+            }
+            root = stack.pop();
+            if (prev >= root.val) return false;
+            prev = root.val;
+            root = root.right;
+        }
+        return true;
+    }
+}
+```
 
 
 
