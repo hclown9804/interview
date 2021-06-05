@@ -1836,9 +1836,51 @@ class Solution {
 }
 ```
 
+```java
+class Solution {
+    public boolean isValidBST(TreeNode root) {
+        return inorder(root);
+    }
 
+    long prev = Long.MIN_VALUE;
+    public boolean inorder(TreeNode root) {
+        if (root == null) return true;
+        boolean l = inorder(root.left);
+        if (prev >= root.val) return false;
+        prev = root.val;
+        boolean r = inorder(root.right);
+        return l && r;
+    }
+}
+```
 
+### 圆环回原点问题
 
+> ```
+> 圆环上有10个点，编号为0~9。从0点出发，每次可以逆时针和顺时针走一步，问走n步回到0点共有多少种走法。
+> 输入: 2
+> 输出: 2
+> 解释：有2种方案。分别是0->1->0和0->9->0
+> ```
+
+#### 思路：DP
+
+* $f[i][j]$：表示从原点走 $i$ 步到 $j$ 的方案数；
+* $f[i][j]=f[i-1][(j-1+length)\%length]+f[i-1][(j+1+length)\%length]$
+
+```java
+public static int dp(int n) {
+    int length = 10;
+    int[][] f = new int[n + 1][length];
+    f[0][0] = 1;
+    for (int i = 1; i <= n; ++i) {
+        for (int j = 0; j < length; ++j) {
+            f[i][j] = f[i - 1][(j - 1 + length) % length] + f[i - 1][(j + 1 + length) % length];
+        }
+    }
+    return f[n][0];
+}
+```
 
 
 
