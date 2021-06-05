@@ -1757,6 +1757,52 @@ class Solution extends SolBase {
 }
 ```
 
+### [76. 最小覆盖子串(hard)](https://leetcode-cn.com/problems/minimum-window-substring/)
+
+> ```
+> 输入：s = "ADOBECODEBANC", t = "ABC"
+> 输出："BANC"
+> ```
+
+#### 思路：滑动窗口+哈希表
+
+* 使用两个哈希表，$hs$ 维护 $[j,i]$ 区间各个字符出现了多少次， $ht$ 维护 $t$ 中每个字符出现多少次；
+* 使用变量 $cnt$ 维护 $[j,i]$ 区间满足 $t$ 中字符串的元素的个数；
+* 将当前元素 $s[i]$ 加入 $hs$ 中，若 $hs[s[i]]<=ht[s[i]]$ 则 $cnt$++，若 $hs$ 中当前元素个数大于 $ht$ 中个数，则移动 $j$ 的位置并且更新 $hs$ 中的值；
+* 判断当前维护的区间是否满足要求，满足则更新答案。
+
+时间复杂度：$O(N)$
+
+空间复杂度：$O(M)$ M：表示字符集大小
+
+```java
+class Solution {
+    public String minWindow(String s, String t) {
+        int[] hs = new int[128], ht = new int[128];
+        char[] str = s.toCharArray();
+        for (char c: t.toCharArray()) ht[c]++;
+        String ans = "";
+        int cnt = 0, len = Integer.MAX_VALUE;
+        for (int i = 0, j = 0; i < s.length(); ++i) {
+            hs[str[i]]++;
+            if (hs[str[i]] <= ht[str[i]]) cnt++;
+            while (j < i && hs[str[j]] > ht[str[j]]) hs[str[j++]]--;
+            if (cnt == t.length() && i - j + 1 < len) {
+                len = i - j + 1;
+                ans = s.substring(j, i + 1);
+            }
+        }
+        return ans;
+    }
+}
+```
+
+
+
+
+
+
+
 
 
 
