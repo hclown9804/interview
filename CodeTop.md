@@ -2088,6 +2088,63 @@ class Solution {
 }
 ```
 
+### [148. 排序链表(mid)](https://leetcode-cn.com/problems/sort-list/)
+
+> ```
+> 输入：head = [4,2,1,3]
+> 输出：[1,2,3,4]
+> ```
+>
+> ![img](https://assets.leetcode.com/uploads/2020/09/14/sort_list_1.jpg)
+
+#### 思路：归并排序
+
+* 找到链表中点并断开，递归对两个子链表归并。
+
+时间复杂度：$O(NlongN)$
+
+空间复杂度：$O(logN)$
+
+```java
+class Solution {
+    public ListNode sortList(ListNode head) {
+        if (head == null || head.next == null) return head;
+        ListNode mid = getMid(head);
+        ListNode p = head, q = mid.next;
+        mid.next = null;
+        return mergeSort(sortList(p), sortList(q));
+    }
+
+    public ListNode getMid(ListNode head) {
+        ListNode s = head, f = head.next;
+        while (f != null && f.next != null) {
+            s = s.next;
+            f = f.next.next;
+        }
+        return s;
+    }
+
+    public ListNode mergeSort(ListNode l1, ListNode l2) {
+        if (l1 == null || l2 == null) return l1 == null ? l2 : l1;
+        ListNode dummy = new ListNode(-1);
+        ListNode cur = dummy;
+        while (l1 != null && l2 != null) {
+            if (l1.val <= l2.val) {
+                cur.next = l1;
+                l1 = l1.next;
+            } else {
+                cur.next = l2;
+                l2 = l2.next;
+            }
+            cur = cur.next;
+        }
+        if (l1 != null) cur.next = l1;
+        if (l2 != null) cur.next = l2;
+        return dummy.next;
+    }
+}
+```
+
 
 
 
