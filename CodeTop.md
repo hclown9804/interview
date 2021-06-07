@@ -2017,6 +2017,81 @@ class Solution {
 }
 ```
 
+### [958. 二叉树的完全性检验(mid)](https://leetcode-cn.com/problems/check-completeness-of-a-binary-tree/)
+
+> ```
+> 输入：[1,2,3,4,5,6]
+> 输出：true
+> 解释：最后一层前的每一层都是满的（即，结点值为 {1} 和 {2,3} 的两层），且最后一层中的所有结点（{4,5,6}）都尽可能地向左。
+> ```
+>
+> ![img](https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2018/12/15/complete-binary-tree-1.png)
+
+#### 思路：BFS
+
+* 标记是否遇到空节点，若已遇到且后面有非空节点则不是完全二叉树。
+
+时间复杂度：$O(N)$
+
+空间复杂度：$O(N)$
+
+```java
+class Solution {
+    public boolean isCompleteTree(TreeNode root) {
+        if (root == null) return true;
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(root);
+        boolean flag = false;
+        while (!queue.isEmpty()) {
+            TreeNode t = queue.poll();
+            if (t == null) {
+                flag = true;
+                continue;
+            } else {
+                if (flag) return false;
+                queue.offer(t.left);
+                queue.offer(t.right);
+            }
+        }
+        return true;
+    }
+}
+```
+
+### [20. 有效的括号(easy)](https://leetcode-cn.com/problems/valid-parentheses/)
+
+> ```
+> 输入：s = "()[]{}"
+> 输出：true
+> ```
+
+#### 思路：栈
+
+* 遇到左括号，栈中压入对应的右括号，遇到右括号，则匹配栈顶元素，若栈为空或不匹配则返回 $false$，最后判断栈是否为空。
+
+时间复杂度：$O(N)$
+
+空间复杂度：$O(N)$
+
+```java
+class Solution {
+    public boolean isValid(String s) {
+        Deque<Character> stack = new LinkedList<>();
+        for (char c: s.toCharArray()) {
+            if (c == '(') stack.push(')');
+            else if (c == '[') stack.push(']');
+            else if (c == '{') stack.push('}');
+            else if (stack.isEmpty() || c != stack.pop()) return false;
+        }
+        return stack.isEmpty();
+    }
+}
+```
+
+
+
+
+
 
 
 
