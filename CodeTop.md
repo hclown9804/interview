@@ -1954,3 +1954,70 @@ class Solution {
 }
 ```
 
+### [322. 零钱兑换(mid)](https://leetcode-cn.com/problems/coin-change/)
+
+> ```
+> 输入：coins = [1, 2, 5], amount = 11
+> 输出：3 
+> 解释：11 = 5 + 5 + 1
+> ```
+
+#### 思路：完全背包
+
+时间复杂度：$O(amount*N)$
+
+空间复杂度：$O(N)$
+
+```java
+class Solution {
+    public int coinChange(int[] coins, int amount) {
+        int[] f = new int[amount + 1];
+        Arrays.fill(f, amount + 1);
+        f[0] = 0;
+        for (int x: coins) {
+            for (int i = x; i <= amount; ++i) {
+                f[i] = Math.min(f[i], f[i - x] + 1);
+            }
+        }
+        return f[amount] > amount ? -1 : f[amount];
+    }
+}
+```
+
+### [518. 零钱兑换 II(mid)](https://leetcode-cn.com/problems/coin-change-2/)
+
+> ```
+> 输入: amount = 5, coins = [1, 2, 5]
+> 输出: 4
+> 解释: 有四种方式可以凑成总金额:
+> 5=5
+> 5=2+2+1
+> 5=2+1+1+1
+> 5=1+1+1+1+1
+> ```
+
+#### 思路：完全背包
+
+时间复杂度：$O(amount*N)$
+
+空间复杂度：$O(N)$
+
+```java
+class Solution {
+    public int change(int amount, int[] coins) {
+        int[] f = new int[amount + 1];
+        f[0] = 1;
+        for (int x: coins) {
+            for (int i = x; i <= amount; ++i) {
+                f[i] += f[i - x];
+            }
+        }
+        return f[amount];
+    }
+}
+```
+
+
+
+
+
