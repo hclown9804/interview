@@ -825,21 +825,28 @@ class Solution {
 // 快慢指针求中点
 class Solution {
     public boolean isPalindrome(ListNode head) {
-        ListNode slow = head, fast = head;
-        while (fast != null && fast.next != null) {
-            fast = fast.next.next;
-            slow = slow.next;
-        }
-        ListNode p = head, q = reverseList(slow);
-        while (q != null) {
+        ListNode mid = getMid(head);
+        ListNode p = head, s = mid.next;
+        mid.next = null;
+        ListNode q = reverse(s);
+        while (p != null && q != null) {
             if (p.val != q.val) return false;
             p = p.next;
             q = q.next;
         }
         return true;
-    }   
+    }
 
-    public ListNode reverseList(ListNode head) {
+    public ListNode getMid(ListNode head) {
+        ListNode s = head, f = head.next;
+        while (f != null && f.next != null) {
+            s = s.next;
+            f = f.next.next;
+        }
+        return s;
+    }
+
+    public ListNode reverse(ListNode head) {
         ListNode prev = null, cur = head;
         while (cur != null) {
             ListNode next = cur.next;
