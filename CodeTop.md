@@ -2152,6 +2152,45 @@ class Solution {
 }
 ```
 
+### [32. 最长有效括号(hard)](https://leetcode-cn.com/problems/longest-valid-parentheses/)
+
+> ```
+> 输入：s = ")()())"
+> 输出：4
+> 解释：最长有效括号子串是 "()()"
+> ```
+
+#### 思路：栈
+
+* 维护一个栈，保持栈底元素为当前已遍历的元素中最后一个没有被匹配的右括号的下标；
+* 若遇到左括号则下标压栈，若为右括号则弹栈表示匹配；
+* 若栈为空，则当前右括号没有被匹配，则压栈；若栈不为空，则更新答案。
+
+时间复杂度：$O(N)$
+
+空间复杂度：$O(N)$
+
+```java
+class Solution {
+    public int longestValidParentheses(String s) {
+        Deque<Integer> stack = new LinkedList<>();
+        int ans = 0;
+        stack.push(-1);
+        for (int i = 0; i < s.length(); ++i) {
+            if (s.charAt(i) == '(') stack.push(i);
+            else {
+                stack.pop();
+                if (stack.isEmpty()) stack.push(i);
+                else ans = Math.max(ans, i - stack.peek());
+            }
+        }
+        return ans;
+    }
+}
+```
+
+
+
 
 
 
