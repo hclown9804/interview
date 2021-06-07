@@ -1913,9 +1913,44 @@ class Solution {
 }
 ```
 
+### [48. 旋转图像(mid)](https://leetcode-cn.com/problems/rotate-image/)
 
+> ```
+> 输入：matrix = [[1,2,3],[4,5,6],[7,8,9]]
+> 输出：[[7,4,1],[8,5,2],[9,6,3]]
+> ```
+>
+> ![img](https://assets.leetcode.com/uploads/2020/08/28/mat1.jpg)
 
+#### 思路：原地旋转
 
+* 首先对矩阵根据水平线上下翻转，然后根据主对角线翻转。
 
+时间复杂度：$O(N^2)$
 
+空间复杂度：$O(1)$
+
+```java
+class Solution {
+    public void rotate(int[][] matrix) {
+        int n = matrix.length, m = matrix[0].length;
+        for (int i = 0; i < n / 2; ++i) {
+            for (int j = 0; j < n; ++j) {
+                swap(matrix, i, j, n - 1 - i, j);
+            }
+        }
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < i; ++j) {
+                swap(matrix, i, j, j, i);
+            }
+        }
+    }
+
+    public void swap(int[][] nums, int x1, int y1, int x2, int y2) {
+        int t = nums[x1][y1];
+        nums[x1][y1] = nums[x2][y2];
+        nums[x2][y2] = t;
+    }
+}
+```
 
