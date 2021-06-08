@@ -25,7 +25,7 @@ class Solution {
 }
 ```
 
-### [673. 最长递增子序列的个数](https://leetcode-cn.com/problems/number-of-longest-increasing-subsequence/)
+#### [673. 最长递增子序列的个数](https://leetcode-cn.com/problems/number-of-longest-increasing-subsequence/)
 
 > ```
 > 输入: [1,3,5,4,7]
@@ -63,7 +63,33 @@ class Solution {
 }
 ```
 
+#### [354. 俄罗斯套娃信封问题](https://leetcode-cn.com/problems/russian-doll-envelopes/)
 
+> ```
+> 输入：envelopes = [[5,4],[6,4],[6,7],[2,3]]
+> 输出：3
+> 解释：最多信封的个数为 3, 组合为: [2,3] => [5,4] => [6,7]。
+> ```
+
+```java
+class Solution {
+    public int maxEnvelopes(int[][] envelopes) {
+        int n = envelopes.length;
+        if (n == 0) return n;
+        Arrays.sort(envelopes, (a, b)->(a[0] - b[0]));
+        int[] f = new int[n];
+        int ans = 0;
+        for (int i = 0; i < n; ++i) {
+            f[i] = 1;
+            for (int j = 0; j < n; ++j) {
+                if (envelopes[j][0] < envelopes[i][0] && envelopes[j][1] < envelopes[i][1]) f[i] = Math.max(f[i], f[j] + 1);
+            }
+            ans = Math.max(ans, f[i]);
+        }
+        return ans;
+    }
+}
+```
 
 
 
