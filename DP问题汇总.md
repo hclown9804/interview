@@ -91,7 +91,42 @@ class Solution {
 }
 ```
 
+### [1626. 无矛盾的最佳球队](https://leetcode-cn.com/problems/best-team-with-no-conflicts/)
 
+> ```
+> 输入：scores = [4,5,6,5], ages = [2,1,2,1]
+> 输出：16
+> 解释：最佳的选择是后 3 名球员。注意，你可以选中多个同龄球员。
+> ```
+
+```java
+class Solution {
+    public int bestTeamScore(int[] scores, int[] ages) {
+        int n = scores.length;
+        int[][] nums = new int[n][2];
+        for (int i = 0; i < n; ++i) {
+            nums[i][0] = ages[i];
+            nums[i][1] = scores[i];
+        }
+        Arrays.sort(nums, new Comparator<int[]>() {
+            public int compare(int[] a, int[] b) {
+                if (a[0] == b[0]) return a[1] - b[1];
+                return a[0] - b[0];
+            }
+        });
+        int[] f = new int[n];
+        for (int i = 0; i < n; ++i) f[i] = nums[i][1];
+        int ans = 0;
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < i; ++j) {
+                if (nums[j][1] <= nums[i][1]) f[i] = Math.max(f[i], f[j] + nums[i][1]);
+            }
+            ans = Math.max(ans, f[i]);
+        }
+        return ans;
+    }
+}
+```
 
 
 
