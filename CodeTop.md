@@ -2189,7 +2189,99 @@ class Solution {
 }
 ```
 
+### [113. 路径总和 II(mid)](https://leetcode-cn.com/problems/path-sum-ii/)
 
+> ```
+> 输入：root = [5,4,8,11,null,13,4,7,2,null,null,5,1], targetSum = 22
+> 输出：[[5,4,11,2],[5,8,4,5]]
+> ```
+>
+> ![img](https://assets.leetcode.com/uploads/2021/01/18/pathsumii1.jpg)
+
+#### 思路：搜索
+
+时间复杂度：$O(N^2)$
+
+空间复杂度：$O(N)$
+
+```java
+class Solution {
+    List<List<Integer>> ans = new ArrayList<>();
+    List<Integer> path = new ArrayList<>();
+
+    public List<List<Integer>> pathSum(TreeNode root, int targetSum) {
+        dfs(root, targetSum);
+        return ans;
+    }
+
+    public void dfs(TreeNode root, int targetSum) {
+        if (root == null) return;
+        path.add(root.val);
+        targetSum -= root.val;
+        if (root.left == null && root.right == null && targetSum == 0)
+            ans.add(new ArrayList<>(path));
+        dfs(root.left, targetSum);
+        dfs(root.right, targetSum);
+        path.remove(path.size() - 1);
+    }
+}
+```
+
+### [18. 四数之和(mid)](https://leetcode-cn.com/problems/4sum/)
+
+> ```
+> 输入：nums = [1,0,-1,0,-2,2], target = 0
+> 输出：[[-2,-1,1,2],[-2,0,0,2],[-1,0,0,1]]
+> ```
+
+#### 思路：排序+双指针
+
+* 首先对数组进行排序，方便枚举和去重；
+* 枚举第一个数：
+  * 如果当前数字等于上一个数字，则去重；
+  * 如果连续的四个数字和大于 $target$，则不可能满足要求；
+  * 如果当前数字加上最大的三个数小于 $target$，则结束当前枚举；
+* 枚举第二个数：
+  * 操作同上；
+  * 双指针遍历最后两个数，同时去重。
+
+时间复杂度：$O(N^3)$
+
+空间复杂度：$O(1)$
+
+```java
+class Solution {
+    public List<List<Integer>> fourSum(int[] nums, int target) {
+        int n = nums.length;
+        List<List<Integer>> ans = new ArrayList<>();
+        if (nums == null || n < 4) return ans;
+        Arrays.sort(nums);
+        for (int i = 0; i < n - 3; ++i) {
+            if (i > 0 && nums[i] == nums[i - 1]) continue;
+            if (nums[i] + nums[i + 1] + nums[i + 2] + nums[i + 3] > target) break;
+            if (nums[i] + nums[n - 3] + nums[n - 2] + nums[n - 1] < target) continue;
+            for (int j = i + 1; j < n - 2; ++j) {
+                if (j > i + 1 && nums[j] == nums[j - 1]) continue;
+                if (nums[i] + nums[j] + nums[j + 1] + nums[j + 2] > target) break;
+                if (nums[i] + nums[j] + nums[n - 2] + nums[n - 1] < target) continue;
+                int l = j + 1, r = n - 1;
+                while (l < r) {
+                    if (nums[i] + nums[j] + nums[l] + nums[r] < target) l++;
+                    else if (nums[i] + nums[j] + nums[l] + nums[r] > target) r--;
+                    else {
+                        ans.add(new ArrayList<>(Arrays.asList(nums[i], nums[j], nums[l], nums[r])));
+                        l++;
+                        r--;
+                        while (l < r && nums[l] == nums[l - 1]) l++;
+                        while (l < r && nums[r] == nums[r + 1]) r--;
+                    }
+                }
+            } 
+        }
+        return ans;
+    }
+}
+```
 
 
 
