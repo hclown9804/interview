@@ -292,27 +292,61 @@ class Solution {
 ```java
 class Solution {
     public int maxSubarraySumCircular(int[] nums) {
-        int n = nums.length;
-        int f = nums[0], max = nums[0], sum = nums[0], min = 0;
+        int n = nums.length, max = nums[0], f = nums[0], sum = nums[0], min = 0;
         for (int i = 1; i < n; ++i) {
             sum += nums[i];
             f = nums[i] + Math.max(f, 0);
             max = Math.max(max, f);
         }
-
         f = nums[0];
         for (int i = 1; i < n - 1; ++i) {
-            f = nums[i] + Math.min(0, f);
-            min = Math.min(f, min);
+            f = nums[i] + Math.min(f, 0);
+            min = Math.min(min, f);
         }
         return Math.max(sum - min, max);
     }
 }
 ```
 
+#### [面试题 17.24. 最大子矩阵](https://leetcode-cn.com/problems/max-submatrix-lcci/)
 
+> ```
+> 输入：
+> [[9,-8,1,3,-2],
+> [-3,7,6,-2,4],
+> [6,-4,-4,8,-7]]
+> 输出：
+> [0,0,2,3]
+> ```
 
-
+```java
+class Solution {
+    public int[] getMaxMatrix(int[][] matrix) {
+        int n = matrix.length, m = matrix[0].length;
+        int[][] sum = new int[n + 1][m + 1];
+        for (int i = 1; i <= n; ++i) {
+            for (int j = 1; j <= m; ++j) {
+                sum[i][j] = sum[i - 1][j] + sum[i][j - 1] - sum[i - 1][j - 1] + matrix[i - 1][j - 1];
+            }
+        }
+        int max = Integer.MIN_VALUE;
+        List<Integer> ans = new ArrayList<>();
+        for (int i = 0; i < m; ++i) {
+            for (int j = i; j < m; ++j) {
+                for (int k = 0, pre = 0; k < n; ++k) {
+                    int val = sum[k + 1][j + 1] - sum[k + 1][i] - sum[pre][j + 1] + sum[pre][i];
+                    if (max < val) {
+                        max = val;
+                        ans = Arrays.asList(pre, i, k, j);
+                    }
+                    if (val <= 0) pre = k + 1;
+                }
+            }
+        }
+        return ans.stream().mapToInt(Integer::valueOf).toArray();
+    }
+}
+```
 
 
 
