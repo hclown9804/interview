@@ -389,6 +389,40 @@ class Solution {
 }
 ```
 
+#### [1186. 删除一次得到子数组最大和](https://leetcode-cn.com/problems/maximum-subarray-sum-with-one-deletion/)
+
+> ```
+> 输入：arr = [1,-2,0,3]
+> 输出：4
+> 解释：我们可以选出 [1, -2, 0, 3]，然后删掉 -2，这样得到 [1, 0, 3]，和最大。
+> ```
+
+* $f[i][0]$：到第 $i$ 个元素没有删除操作的最大子数组之和；
+* $f[i][1]$：到第 $i$ 个元素任意删除一次的最大子数组之和；
+
+```java
+class Solution {
+    public int maximumSum(int[] arr) {
+        int n = arr.length, ans = arr[0];
+        int[][] f = new int[n][2];
+        f[0][0] = arr[0];
+        f[0][1] = Integer.MIN_VALUE;
+        for (int i = 1; i < n; ++i) {
+            f[i][0] = Math.max(f[i - 1][0] + arr[i], arr[i]);
+            f[i][1] = Math.max((f[i - 1][1] == Integer.MIN_VALUE ? 0 : f[i - 1][1]) + arr[i], f[i - 1][0]);
+            ans = Math.max(ans, Math.max(f[i][0], f[i][1]));
+        }
+        return ans;
+    }
+}
+```
+
+
+
+
+
+
+
 
 
 
