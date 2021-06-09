@@ -417,6 +417,30 @@ class Solution {
 }
 ```
 
+* 删除 $k$ 次的到子数组最大和
+
+```java
+class Solution {
+    public int maximumSum(int[] arr) {
+        int n = arr.length;
+        int k = 1, ans = arr[0];
+        int[][] f = new int[n][k + 1];
+        f[0][0] = arr[0];
+        for (int i = 1; i < n; ++i) {
+            f[i][0] = Math.max(f[i - 1][0] + arr[i], arr[i]);
+            ans = Math.max(ans, f[i][0]);
+        }
+        for (int i = 1; i < n; ++i) {
+            for (int j = 1; j <= k; ++j) {
+                f[i][j] = Math.max(f[i - 1][j] + arr[i], f[i - 1][j - 1]);
+                ans = Math.max(ans, f[i][j]);
+            }
+        }
+        return ans;
+    }
+}
+```
+
 
 
 
