@@ -406,10 +406,9 @@ class Solution {
         int n = arr.length, ans = arr[0];
         int[][] f = new int[n][2];
         f[0][0] = arr[0];
-        f[0][1] = Integer.MIN_VALUE;
         for (int i = 1; i < n; ++i) {
             f[i][0] = Math.max(f[i - 1][0] + arr[i], arr[i]);
-            f[i][1] = Math.max((f[i - 1][1] == Integer.MIN_VALUE ? 0 : f[i - 1][1]) + arr[i], f[i - 1][0]);
+            f[i][1] = Math.max(f[i - 1][1] + arr[i], f[i - 1][0]);
             ans = Math.max(ans, Math.max(f[i][0], f[i][1]));
         }
         return ans;
@@ -441,7 +440,28 @@ class Solution {
 }
 ```
 
+#### [1191. K 次串联后最大子数组之和](https://leetcode-cn.com/problems/k-concatenation-maximum-sum/)
 
+> ```
+> 输入：arr = [1,-2,1], k = 5
+> 输出：2
+> ```
+
+```java
+class Solution {
+    public int kConcatenationMaxSum(int[] arr, int k) {
+        long max = arr[0] > 0 ? arr[0] : 0L, ans = max, sum = arr[0];
+        int n = arr.length, MOD = 1000000007;
+        for (int i = 1; i < Math.min(k, 2) * n; ++i) {
+            max = Math.max(max + arr[i % n], arr[i % n]);
+            ans = Math.max(ans, max);
+            if (i < n) sum += arr[i];
+        }
+        while (sum > 0 && --k >= 2) ans = (ans + sum) % MOD;
+        return (int)ans % MOD;
+    }
+}
+```
 
 
 
