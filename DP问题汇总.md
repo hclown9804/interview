@@ -91,7 +91,7 @@ class Solution {
 }
 ```
 
-### [1626. 无矛盾的最佳球队](https://leetcode-cn.com/problems/best-team-with-no-conflicts/)
+#### [1626. 无矛盾的最佳球队](https://leetcode-cn.com/problems/best-team-with-no-conflicts/)
 
 > ```
 > 输入：scores = [4,5,6,5], ages = [2,1,2,1]
@@ -128,7 +128,45 @@ class Solution {
 }
 ```
 
+#### [1048. 最长字符串链](https://leetcode-cn.com/problems/longest-string-chain/)
 
+> ```
+> 输入：["a","b","ba","bca","bda","bdca"]
+> 输出：4
+> 解释：最长单词链之一为 "a","ba","bda","bdca"。
+> ```
+
+```java
+class Solution {
+    public int longestStrChain(String[] words) {
+        Arrays.sort(words, (a, b)->(a.length() - b.length()));
+        int n = words.length;
+        int[] f = new int[n];
+        int ans = 0;
+        for (int i = 0; i < n; ++i) {
+            f[i] = 1;
+            String a = words[i];
+            for (int j = 0; j < i; ++j) {
+                String b = words[j];
+                if (check(b, a)) f[i] = Math.max(f[i], f[j] + 1);
+            }
+            ans = Math.max(ans, f[i]);
+        }
+        return ans;
+    }
+
+    public boolean check(String a, String b) {
+        int n = a.length(), m = b.length();
+        if (n != m - 1) return false;
+        int i = 0, j = 0;
+        while (i < n && j < m) {
+            if (a.charAt(i) == b.charAt(j)) i++;
+            j++;
+        }
+        return i == n;
+    }
+}
+```
 
 
 
