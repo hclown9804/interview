@@ -217,3 +217,67 @@ class Solution {
 }
 ```
 
+#### [152. 乘积最大子数组](https://leetcode-cn.com/problems/maximum-product-subarray/)
+
+> ```
+> 输入: [2,3,-2,4]
+> 输出: 6
+> 解释: 子数组 [2,3] 有最大乘积 6。
+> ```
+
+* $f[i]$：以 $nums[i]$ 结尾的乘积最大值；
+  * $nums[i]>0:f[i]=f[i-1]*nums[i]$
+  * $nums[i]<0:f[i]=g[i-1]*nums[i]$
+* $g[i]$：以 $nums[i]$ 结尾的乘积最小值；
+  * $nums[i]>0:g[i]=g[i-1]*nums[i]$
+  * $nums[i]<0:g[i]=f[i-1]*nums[i]$
+
+```java
+class Solution {
+    public int maxProduct(int[] nums) {
+        int n = nums.length;
+        int ans = nums[0];
+        int[] f = new int[n + 1], g = new int[n + 1];
+        f[0] = g[0] = nums[0];
+        for (int i = 1; i < n; ++i) {
+            int t = nums[i];
+            if (nums[i] > 0) {
+                f[i] = f[i - 1] * t;
+                g[i] = g[i - 1] * t;
+            }
+            if (nums[i] < 0) {
+                f[i] = g[i - 1] * t;
+                g[i] = f[i - 1] * t;
+            }
+            f[i] = Math.max(t, Math.max(f[i], g[i]));
+            g[i] = Math.min(t, Math.min(f[i], g[i]));
+            ans = Math.max(ans, f[i]);
+        }
+        return ans;
+    }
+}
+
+class Solution {
+    public int maxProduct(int[] nums) {
+        int n = nums.length;
+        int ans = nums[0], f = nums[0], g = nums[0];
+        for (int i = 1; i < n; ++i) {
+            int a = nums[i];
+            int fa = f * a, ga = g * a;
+            f = Math.max(a, Math.max(fa, ga));
+            g = Math.min(a, Math.min(fa, ga));
+            ans = Math.max(f, ans);
+        }
+        return ans;
+    }
+}
+```
+
+
+
+
+
+
+
+
+
