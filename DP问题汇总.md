@@ -1,3 +1,5 @@
+
+
 [DP问题分类汇总-加强版](https://chengzhaoxi.xyz/42296.html)
 
 # 线性DP
@@ -204,6 +206,8 @@ class Solution {
 > 解释：连续子数组 [4,-1,2,1] 的和最大，为 6 。
 > ```
 
+*Kanade 算法*
+
 ```java
 class Solution {
     public int maxSubArray(int[] nums) {
@@ -273,7 +277,38 @@ class Solution {
 }
 ```
 
+#### [918. 环形子数组的最大和](https://leetcode-cn.com/problems/maximum-sum-circular-subarray/)
 
+> ```
+> 输入：[3,-1,2,-1]
+> 输出：4
+> 解释：从子数组 [2,-1,3] 得到最大和 2 + (-1) + 3 = 4
+> ```
+
+* 两次 $Kadane$ 算法
+* 不使用循环数组：直接使用 $Kadane$ 算法；
+* 使用循环数组：必然包含首尾两个元素，因为求子数组最大值，则 $nums[1:n-1]$ 必定最小。
+
+```java
+class Solution {
+    public int maxSubarraySumCircular(int[] nums) {
+        int n = nums.length;
+        int f = nums[0], max = nums[0], sum = nums[0], min = 0;
+        for (int i = 1; i < n; ++i) {
+            sum += nums[i];
+            f = nums[i] + Math.max(f, 0);
+            max = Math.max(max, f);
+        }
+
+        f = nums[0];
+        for (int i = 1; i < n - 1; ++i) {
+            f = nums[i] + Math.min(0, f);
+            min = Math.min(f, min);
+        }
+        return Math.max(sum - min, max);
+    }
+}
+```
 
 
 
