@@ -348,5 +348,60 @@ class Solution {
 }
 ```
 
+#### [363. 矩形区域不超过 K 的最大数值和](https://leetcode-cn.com/problems/max-sum-of-rectangle-no-larger-than-k/)
+
+> ```
+> 输入：matrix = [[1,0,1],[0,-2,3]], k = 2
+> 输出：2
+> 解释：蓝色边框圈出来的矩形区域 [[0, 1], [-2, 3]] 的数值和是 2，且 2 是不超过 k 的最大数字（k = 2）
+> ```
+>
+> ![img](https://assets.leetcode.com/uploads/2021/03/18/sum-grid.jpg)
+
+```java
+class Solution {
+    public int maxSumSubmatrix(int[][] matrix, int k) {
+        int n = matrix.length, m = matrix[0].length, ans = Integer.MIN_VALUE;
+        int[][] sum = new int[n + 1][m + 1];
+        for (int i = 1; i <= n; ++i) {
+            for (int j = 1; j <= m; ++j) {
+                sum[i][j] = sum[i][j - 1] + sum[i - 1][j] - sum[i - 1][j - 1] + matrix[i - 1][j - 1];
+            }
+        }
+        for (int i = 1; i <= m; ++i) {
+            for (int j = i; j <= m; ++j) {
+                TreeSet<Integer> set = new TreeSet<>();
+                set.add(0);
+                for (int t = 1; t <= n; ++t) {
+                    int val = get(sum, 1, i, t, j);
+                    Integer ceil = set.ceiling(val - k);
+                    if (ceil != null) ans = Math.max(ans, val - ceil);
+                    set.add(val);
+                }
+            }
+        }
+        return ans;
+    }
+
+    public int get(int[][] sum, int x1, int y1, int x2, int y2) {
+        return sum[x2][y2] - sum[x1 - 1][y2] - sum[x2][y1 - 1] + sum[x1 - 1][y1 - 1];
+    }
+}
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
