@@ -168,7 +168,31 @@ class Solution {
 }
 ```
 
+#### [646. 最长数对链](https://leetcode-cn.com/problems/maximum-length-of-pair-chain/)
 
+> ```
+> 输入：[[1,2], [2,3], [3,4]]
+> 输出：2
+> 解释：最长的数对链是 [1,2] -> [3,4]
+> ```
+
+```java
+class Solution {
+    public int findLongestChain(int[][] pairs) {
+        Arrays.sort(pairs, (a, b)->(a[0] - b[0]));
+        int n = pairs.length, ans = 0;
+        int[] f = new int[n];
+        for (int i = 0; i < n; ++i) {
+            f[i] = 1;
+            for (int j = 0; j < i; ++j) {
+                if (pairs[j][1] < pairs[i][0]) f[i] = Math.max(f[i], f[j] + 1);
+            }
+            ans = Math.max(ans, f[i]);
+        }
+        return ans;
+    }
+}
+```
 
 
 
